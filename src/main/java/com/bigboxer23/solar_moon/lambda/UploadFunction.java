@@ -8,6 +8,8 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.open_search.OpenSearchComponent;
 import com.bigboxer23.solar_moon.web.AuthenticationUtils;
+import com.bigboxer23.solar_moon.web.Transaction;
+import com.bigboxer23.solar_moon.web.TransactionUtil;
 import com.squareup.moshi.Moshi;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -51,6 +53,7 @@ public class UploadFunction implements RequestStreamHandler, MeterConstants {
 		return component;
 	}
 
+	@Transaction
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context theContext)
 			throws IOException {
@@ -58,6 +61,7 @@ public class UploadFunction implements RequestStreamHandler, MeterConstants {
 				OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
 			try {
 				LambdaRequest request = moshi.adapter(LambdaRequest.class).fromJson(IOUtils.toString(reader));
+				TransactionUtil.setRemoteFromLambdaRequest(request);
 				logger.debug("request: " + moshi.adapter(LambdaRequest.class).toJson(request));
 				String customerId = AuthenticationUtils.authenticateRequest(request, customerComponent);
 				if (customerId == null) {
