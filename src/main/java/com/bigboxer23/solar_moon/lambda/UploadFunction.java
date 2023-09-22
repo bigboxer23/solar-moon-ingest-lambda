@@ -29,8 +29,8 @@ public class UploadFunction implements RequestStreamHandler, MeterConstants {
 
 	private GenerationMeterComponent component;
 
-	private void writeError(String message, int errorCode, OutputStreamWriter writer) throws IOException {
-		writer.write(toJSONString(new LambdaResponse(errorCode, "{error:'" + message + "'}")));
+	private void sendResponse(String message, int errorCode, OutputStreamWriter writer) throws IOException {
+		writer.write(toJSONString(new LambdaResponse(errorCode, message, MediaType.TEXT_XML.toString())));
 	}
 
 	private String toJSONString(LambdaResponse response) {
@@ -61,20 +61,19 @@ public class UploadFunction implements RequestStreamHandler, MeterConstants {
 				logger.debug("request: " + moshi.adapter(LambdaRequest.class).toJson(request));
 				String customerId = AuthenticationUtils.authenticateRequest(request, customerComponent);
 				if (customerId == null) {
-					writeError(XML_FAILURE_RESPONSE, HttpStatus.UNAUTHORIZED.value(), writer);
+					sendResponse(XML_FAILURE_RESPONSE, HttpStatus.UNAUTHORIZED.value(), writer);
 					return;
 				}
 				DeviceData data = getComponent().handleDeviceBody(request.getBody(), customerId);
 				if (data == null) {
-					writeError(XML_FAILURE_RESPONSE, HttpStatus.BAD_REQUEST.value(), writer);
+					sendResponse(XML_FAILURE_RESPONSE, HttpStatus.BAD_REQUEST.value(), writer);
 					return;
 				}
 				logger.info("successfully uploaded data: " + data.getName() + " : " + data.getDate());
-				writer.write(toJSONString(new LambdaResponse(
-						HttpStatus.OK.value(), XML_SUCCESS_RESPONSE, MediaType.TEXT_XML.toString())));
+				sendResponse(XML_SUCCESS_RESPONSE, HttpStatus.OK.value(), writer);
 			} catch (IOException | XPathExpressionException e) {
 				logger.warn("handleRequest:", e);
-				writeError(XML_FAILURE_RESPONSE, HttpStatus.BAD_REQUEST.value(), writer);
+				sendResponse(XML_FAILURE_RESPONSE, HttpStatus.BAD_REQUEST.value(), writer);
 			}
 		}
 	}
