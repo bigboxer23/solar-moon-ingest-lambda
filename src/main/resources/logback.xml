@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+		<!-- Replace the destination with the logstash server: logstash port -->
+		<destination>172.31.21.138:5671</destination>
+		<!-- There can be multiple destinations -->
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+	</appender>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="com.gargoylesoftware.htmlunit.html.BaseFrameElement" level="OFF"/>
+	<logger name="ch.qos.logback.classic" level="OFF"/>
+	<root level="INFO">
+		<!--<appender-ref ref="stash" />-->
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
