@@ -68,6 +68,10 @@ public class UploadFunction implements RequestStreamHandler, MeterConstants {
 					sendResponse(XML_FAILURE_RESPONSE, HttpStatus.UNAUTHORIZED.value(), writer);
 					return;
 				}
+				if (!getComponent().isUpdateEvent(request.getBody())) {
+					sendResponse(XML_SUCCESS_RESPONSE, HttpStatus.OK.value(), writer);
+					return;
+				}
 				DeviceData data = getComponent().handleDeviceBody(request.getBody(), customerId);
 				if (data == null) {
 					sendResponse(XML_FAILURE_RESPONSE, HttpStatus.BAD_REQUEST.value(), writer);
