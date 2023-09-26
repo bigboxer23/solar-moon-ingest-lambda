@@ -1,5 +1,8 @@
 package com.bigboxer23.solar_moon.lambda;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.bigboxer23.solar_moon.*;
@@ -24,12 +27,24 @@ import org.springframework.http.MediaType;
 /** */
 public class UploadFunction implements RequestStreamHandler, MeterConstants {
 
-	private final Moshi moshi = new Moshi.Builder().build();
+	private static final Moshi moshi = new Moshi.Builder().build();
 
 	private static final Logger logger = LoggerFactory.getLogger(UploadFunction.class);
-	private CustomerComponent customerComponent = new CustomerComponent();
+	private static final CustomerComponent customerComponent = new CustomerComponent();
 
-	private GenerationMeterComponent component;
+	private static final GenerationMeterComponent component = getComponent();
+
+	static {
+		setupLogging();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			logger.warn("[runtime] Cleaning up");
+			try {
+				Thread.sleep(1000);
+			} catch (Exception e) {}
+			System.exit(0);
+		}));
+		logger.warn("Static Initialized");
+	}
 
 	private void sendResponse(String message, int errorCode, OutputStreamWriter writer) throws IOException {
 		writer.write(toJSONString(new LambdaResponse(errorCode, message, MediaType.TEXT_XML.toString())));
@@ -39,18 +54,15 @@ public class UploadFunction implements RequestStreamHandler, MeterConstants {
 		return moshi.adapter(LambdaResponse.class).toJson(response);
 	}
 
-	private GenerationMeterComponent getComponent() {
-		if (component == null) {
-			OpenSearchComponent OSComponent = new OpenSearchComponent(new StandardEnvironment());
-			DeviceComponent deviceComponent = new DeviceComponent();
-			OpenWeatherComponent weatherComponent = new OpenWeatherComponent();
-			component = new GenerationMeterComponent(
-					OSComponent,
-					new AlarmComponent(weatherComponent),
-					new DeviceComponent(),
-					new SiteComponent(OSComponent, deviceComponent));
-		}
-		return component;
+	private static GenerationMeterComponent getComponent() {
+		OpenSearchComponent OSComponent = new OpenSearchComponent(new StandardEnvironment());
+		DeviceComponent deviceComponent = new DeviceComponent();
+		OpenWeatherComponent weatherComponent = new OpenWeatherComponent();
+		return new GenerationMeterComponent(
+				OSComponent,
+				new AlarmComponent(weatherComponent),
+				new DeviceComponent(),
+				new SiteComponent(OSComponent, deviceComponent));
 	}
 
 	@Transaction
@@ -68,33 +80,35 @@ public class UploadFunction implements RequestStreamHandler, MeterConstants {
 					sendResponse(XML_FAILURE_RESPONSE, HttpStatus.UNAUTHORIZED.value(), writer);
 					return;
 				}
-				if (!getComponent().isUpdateEvent(request.getBody())) {
+				if (!component.isUpdateEvent(request.getBody())) {
 					sendResponse(XML_SUCCESS_RESPONSE, HttpStatus.OK.value(), writer);
 					return;
 				}
-				DeviceData data = getComponent().handleDeviceBody(request.getBody(), customerId);
+				DeviceData data = component.handleDeviceBody(request.getBody(), customerId);
 				if (data == null) {
 					sendResponse(XML_FAILURE_RESPONSE, HttpStatus.BAD_REQUEST.value(), writer);
 					return;
 				}
 				logger.info("successfully uploaded data: " + data.getName() + " : " + data.getDate());
 				sendResponse(XML_SUCCESS_RESPONSE, HttpStatus.OK.value(), writer);
-			} catch (IOException | XPathExpressionException e) {
+				Thread.sleep(750);
+			} catch (IOException | XPathExpressionException | InterruptedException e) {
 				logger.warn("handleRequest:", e);
 				sendResponse(XML_FAILURE_RESPONSE, HttpStatus.BAD_REQUEST.value(), writer);
 			}
 		}
 	}
 
-	public void setupLogging() {
-		/*LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+	public static void setupLogging() {
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 		loggerContext.reset();
 		JoranConfigurator config = new JoranConfigurator();
 		config.setContext(loggerContext);
 		try {
-			config.doConfigure(this.getClass().getResourceAsStream("/logback.xml"));
+			config.doConfigure(UploadFunction.class.getResourceAsStream("/logback.xml"));
 		} catch (JoranException e) {
 			logger.error("Cannot initialize logger context ", e);
-		}*/
+		}
+		logger.warn("Logging Initialized");
 	}
 }
