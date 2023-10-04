@@ -18,12 +18,12 @@
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.4.10</version>
+      <version>1.4.11</version>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.4.10</version>
+      <version>1.4.11</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -101,7 +101,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>Updating lambda reference</id>
+            <id>Updating upload lambda</id>
             <goals>
               <goal>exec</goal>
             </goals>
@@ -109,6 +109,39 @@
             <configuration>
               <executable>aws</executable>
               <commandlineArgs>lambda update-function-code --function-name upload --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Updating PostUserCreation lambda</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>lambda update-function-code --function-name PostUserCreation --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Updating customerGet lambda</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>lambda update-function-code --function-name customerGet --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Updating customerUpdate lambda</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>lambda update-function-code --function-name customerUpdate --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>
         </executions>
