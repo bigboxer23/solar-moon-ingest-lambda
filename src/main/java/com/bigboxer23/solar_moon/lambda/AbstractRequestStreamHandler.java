@@ -8,6 +8,7 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.bigboxer23.solar_moon.CustomerComponent;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
+import com.bigboxer23.solar_moon.lambda.ingest.UploadFunction;
 import com.bigboxer23.solar_moon.web.Transaction;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
 import com.squareup.moshi.Moshi;
@@ -37,10 +38,6 @@ public abstract class AbstractRequestStreamHandler implements RequestStreamHandl
 			System.exit(0);
 		}));
 		logger.debug("Static Initialized");
-	}
-
-	public String getCustomerIdFromRequest(LambdaRequest request) {
-		return request.getRequestContext().getAuthorizer().getClaims().getSub();
 	}
 
 	public static void setupLogging() {
