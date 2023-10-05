@@ -1,4 +1,4 @@
-package com.bigboxer23.solar_moon.lambda;
+package com.bigboxer23.solar_moon.lambda.customer_creation;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;

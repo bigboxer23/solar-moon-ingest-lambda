@@ -1,7 +1,8 @@
-package com.bigboxer23.solar_moon.lambda;
+package com.bigboxer23.solar_moon.lambda.ingest;
 
 import com.bigboxer23.solar_moon.*;
 import com.bigboxer23.solar_moon.data.DeviceData;
+import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.open_search.OpenSearchComponent;
