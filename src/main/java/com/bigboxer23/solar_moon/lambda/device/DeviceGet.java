@@ -13,25 +13,28 @@ import java.util.Optional;
 public class DeviceGet extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
-		if (request.getPath().equals("/devices/")) {
+		if (request.getPath().equals("/devices/") || request.getPath().equals("/devices")) {
 			List<Device> devices = deviceComponent.getDevices(getCustomerIdFromRequest(request));
 			return new LambdaResponse(
 					devices.isEmpty() ? NOT_FOUND : OK,
 					devices.isEmpty()
-							? null
+							? "No devices available"
 							: moshi.adapter(Types.newParameterizedType(List.class, Device.class))
 									.toJson(devices),
 					APPLICATION_JSON_VALUE);
 		}
-		Device device =
-				deviceComponent.getDevice(deviceIdFromPath(request.getPath()), getCustomerIdFromRequest(request));
+		return getDeviceResponse(
+				deviceComponent.getDevice(deviceIdFromPath(request.getPath()), getCustomerIdFromRequest(request)));
+	}
+
+	public static LambdaResponse getDeviceResponse(Device device) {
 		return new LambdaResponse(
 				device == null ? NOT_FOUND : OK,
 				device == null ? null : moshi.adapter(Device.class).toJson(device),
 				APPLICATION_JSON_VALUE);
 	}
 
-	private String deviceIdFromPath(String path) {
+	public static String deviceIdFromPath(String path) {
 		return Optional.ofNullable(path)
 				.map(p -> p.split("/"))
 				.map(p -> p[p.length - 1])

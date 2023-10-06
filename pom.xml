@@ -18,12 +18,12 @@
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.4.13</version>
+      <version>1.4.14</version>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.4.13</version>
+      <version>1.4.14</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -134,7 +134,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>Updating customer lambda</id>
+            <id>Updating device lambda</id>
             <goals>
               <goal>exec</goal>
             </goals>
