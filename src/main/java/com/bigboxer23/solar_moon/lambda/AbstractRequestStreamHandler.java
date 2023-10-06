@@ -5,13 +5,11 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import com.bigboxer23.solar_moon.CustomerComponent;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.lambda.ingest.UploadFunction;
 import com.bigboxer23.solar_moon.web.Transaction;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
-import com.squareup.moshi.Moshi;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -21,11 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** */
-public abstract class AbstractRequestStreamHandler implements RequestStreamHandler, MediaTypes, HttpStatus {
-	protected static final Moshi moshi = new Moshi.Builder().build();
-
+public abstract class AbstractRequestStreamHandler
+		implements RequestStreamHandler, MediaTypes, HttpStatus, IComponentRegistry {
 	protected static final Logger logger = LoggerFactory.getLogger(AbstractRequestStreamHandler.class);
-	protected static final CustomerComponent customerComponent = new CustomerComponent();
 
 	static {
 		setupLogging();
