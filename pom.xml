@@ -18,12 +18,12 @@
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.4.13</version>
+      <version>1.4.14</version>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.4.13</version>
+      <version>1.4.14</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -100,7 +100,7 @@
               <commandlineArgs>s3 cp ${project.basedir}/target/solar-moon-ingest-lambda-0.1.jar s3://solarmoonanalytics/lambda/</commandlineArgs>
             </configuration>
           </execution>
-          <execution>
+          <!--<execution>
             <id>Updating upload lambda</id>
             <goals>
               <goal>exec</goal>
@@ -108,7 +108,7 @@
             <phase>package</phase>
             <configuration>
               <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code --function-name upload --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+              <commandlineArgs>lambda update-function-code &#45;&#45;function-name upload &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>
           <execution>
@@ -119,7 +119,7 @@
             <phase>package</phase>
             <configuration>
               <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code --function-name PostUserCreation --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+              <commandlineArgs>lambda update-function-code &#45;&#45;function-name PostUserCreation &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>
           <execution>
@@ -130,9 +130,9 @@
             <phase>package</phase>
             <configuration>
               <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code --function-name customer --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+              <commandlineArgs>lambda update-function-code &#45;&#45;function-name customer &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
-          </execution>
+          </execution>-->
           <execution>
             <id>Updating customer lambda</id>
             <goals>
