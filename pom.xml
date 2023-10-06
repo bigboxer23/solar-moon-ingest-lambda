@@ -134,7 +134,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>Updating customer lambda</id>
+            <id>Updating device lambda</id>
             <goals>
               <goal>exec</goal>
             </goals>
