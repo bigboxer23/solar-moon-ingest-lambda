@@ -16,10 +16,8 @@ public class DeviceGet extends MethodHandler {
 		if (request.getPath().equals("/devices/") || request.getPath().equals("/devices")) {
 			List<Device> devices = deviceComponent.getDevices(getCustomerIdFromRequest(request));
 			return new LambdaResponse(
-					devices.isEmpty() ? NOT_FOUND : OK,
-					devices.isEmpty()
-							? "No devices available"
-							: moshi.adapter(Types.newParameterizedType(List.class, Device.class))
+					OK,
+					 moshi.adapter(Types.newParameterizedType(List.class, Device.class))
 									.toJson(devices),
 					APPLICATION_JSON_VALUE);
 		}
