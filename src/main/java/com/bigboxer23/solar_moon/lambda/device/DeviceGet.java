@@ -17,8 +17,8 @@ public class DeviceGet extends MethodHandler {
 			List<Device> devices = deviceComponent.getDevices(getCustomerIdFromRequest(request));
 			return new LambdaResponse(
 					OK,
-					 moshi.adapter(Types.newParameterizedType(List.class, Device.class))
-									.toJson(devices),
+					moshi.adapter(Types.newParameterizedType(List.class, Device.class))
+							.toJson(devices),
 					APPLICATION_JSON_VALUE);
 		}
 		return getDeviceResponse(
