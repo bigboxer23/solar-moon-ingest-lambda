@@ -18,12 +18,12 @@
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.4.16</version>
+      <version>1.4.18</version>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.4.16</version>
+      <version>1.4.18</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -100,7 +100,7 @@
               <commandlineArgs>s3 cp ${project.basedir}/target/solar-moon-ingest-lambda-0.1.jar s3://solarmoonanalytics/lambda/</commandlineArgs>
             </configuration>
           </execution>
-          <execution>
+           <execution>
             <id>Updating upload lambda</id>
             <goals>
               <goal>exec</goal>
@@ -142,6 +142,17 @@
             <configuration>
               <executable>aws</executable>
               <commandlineArgs>lambda update-function-code --function-name device --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Updating search lambda</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>lambda update-function-code --function-name search --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>
         </executions>
