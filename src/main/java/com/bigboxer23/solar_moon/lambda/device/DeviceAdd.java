@@ -16,6 +16,9 @@ public class DeviceAdd extends MethodHandler {
 				.map(device -> {
 					device.setClientId(getCustomerIdFromRequest(request));
 					device.setId(TokenGenerator.generateNewToken());
+					if (!deviceComponent.isValidAdd(device)) {
+						return new LambdaResponse(BAD_REQUEST, "Device is not valid.", APPLICATION_JSON_VALUE);
+					}
 					deviceComponent.addDevice(device);
 					return DeviceGet.getDeviceResponse(deviceComponent.getDevice(device.getId(), device.getClientId()));
 				})
