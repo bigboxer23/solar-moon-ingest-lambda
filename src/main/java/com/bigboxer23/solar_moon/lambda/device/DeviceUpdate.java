@@ -14,8 +14,7 @@ public class DeviceUpdate extends MethodHandler {
 		return Optional.ofNullable(moshi.adapter(Device.class).fromJson(request.getBody()))
 				.map(device -> {
 					device.setClientId(getCustomerIdFromRequest(request));
-					if (!deviceComponent.isValidUpdate(device))
-					{
+					if (!deviceComponent.isValidUpdate(device)) {
 						return new LambdaResponse(BAD_REQUEST, "Device is not valid.", APPLICATION_JSON_VALUE);
 					}
 					deviceComponent.updateDevice(device);

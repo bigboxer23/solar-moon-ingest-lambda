@@ -65,8 +65,14 @@ public abstract class AbstractRequestStreamHandler
 						logger.debug("request: " + request);
 						try {
 							writer.write(moshi.adapter(LambdaResponse.class).toJson(handleLambdaRequest(request)));
-						} catch (IOException e) {
+						} catch (Exception e) {
 							logger.warn("handleRequest:", e);
+							try {
+								writer.write(moshi.adapter(LambdaResponse.class)
+										.toJson(new LambdaResponse(BAD_REQUEST, null, APPLICATION_JSON_VALUE)));
+							} catch (IOException theE) {
+
+							}
 						}
 					});
 		}
