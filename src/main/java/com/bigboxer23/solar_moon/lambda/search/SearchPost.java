@@ -19,6 +19,9 @@ public class SearchPost extends MethodHandler {
 					return new LambdaResponse(
 							OK, OpenSearchUtils.queryToJson(OSComponent.search(searchJSON)), APPLICATION_JSON_VALUE);
 				})
-				.orElseGet(() -> new LambdaResponse(BAD_REQUEST, "Bad Request", APPLICATION_JSON_VALUE));
+				.orElseGet(() -> {
+					logger.warn("SearchPost: Bad Request.");
+					return new LambdaResponse(BAD_REQUEST, "Bad Request", APPLICATION_JSON_VALUE);
+				});
 	}
 }
