@@ -15,12 +15,17 @@ public class DeviceUpdate extends MethodHandler {
 				.map(device -> {
 					device.setClientId(getCustomerIdFromRequest(request));
 					if (!deviceComponent.isValidUpdate(device)) {
+						logger.warn("DeviceUpdate: "
+								+ moshi.adapter(Device.class).toJson(device)
+								+ " Device is not valid.");
 						return new LambdaResponse(BAD_REQUEST, "Device is not valid.", APPLICATION_JSON_VALUE);
 					}
 					deviceComponent.updateDevice(device);
 					return DeviceGet.getDeviceResponse(deviceComponent.getDevice(device.getId(), device.getClientId()));
 				})
-				.orElseGet(
-						() -> new LambdaResponse(NOT_FOUND, "Could not find device to update", APPLICATION_JSON_VALUE));
+				.orElseGet(() -> {
+					logger.warn("DeviceUpdate: Could not find device to update.");
+					return new LambdaResponse(NOT_FOUND, "Could not find device to update", APPLICATION_JSON_VALUE);
+				});
 	}
 }

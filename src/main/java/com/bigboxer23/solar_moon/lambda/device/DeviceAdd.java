@@ -17,6 +17,8 @@ public class DeviceAdd extends MethodHandler {
 					device.setClientId(getCustomerIdFromRequest(request));
 					device.setId(TokenGenerator.generateNewToken());
 					if (!deviceComponent.isValidAdd(device)) {
+						logger.warn(
+								"DeviceAdd: " + moshi.adapter(Device.class).toJson(device) + " Device is not valid.");
 						return new LambdaResponse(BAD_REQUEST, "Device is not valid.", APPLICATION_JSON_VALUE);
 					}
 					deviceComponent.addDevice(device);

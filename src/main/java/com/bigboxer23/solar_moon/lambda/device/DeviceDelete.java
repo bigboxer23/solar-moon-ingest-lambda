@@ -10,6 +10,7 @@ public class DeviceDelete extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		if (request.getPath().equals("/devices/") || request.getPath().equals("/devices")) {
+			logger.warn("DeviceDelete: no device id included.");
 			return new LambdaResponse(BAD_REQUEST, "No device id included", APPLICATION_JSON_VALUE);
 		}
 		deviceComponent.deleteDevice(DeviceGet.deviceIdFromPath(request.getPath()), getCustomerIdFromRequest(request));
