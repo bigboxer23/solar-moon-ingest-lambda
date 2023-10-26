@@ -13,16 +13,13 @@ import software.amazon.awssdk.utils.StringUtils;
 /** */
 public class SearchPost extends MethodHandler {
 
-	private String customerIdOverride = PropertyUtils.getProperty("customer.id.override");
+	private final String customerIdOverride = PropertyUtils.getProperty("customer.id.override");
 
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		return Optional.ofNullable(moshi.adapter(SearchJSON.class).fromJson(request.getBody()))
 				.map(searchJSON -> {
-					searchJSON.setCustomerId(
-							StringUtils.isBlank(customerIdOverride)
-									? getCustomerIdFromRequest(request)
-									: customerIdOverride);
+					searchJSON.setCustomerId(getCustomerId(request));
 					return new LambdaResponse(
 							OK, OpenSearchUtils.queryToJson(OSComponent.search(searchJSON)), APPLICATION_JSON_VALUE);
 				})
@@ -30,5 +27,14 @@ public class SearchPost extends MethodHandler {
 					logger.warn("SearchPost: Bad Request.");
 					return new LambdaResponse(BAD_REQUEST, "Bad Request", APPLICATION_JSON_VALUE);
 				});
+	}
+
+	private String getCustomerId(LambdaRequest request) {
+		String customerId = getCustomerIdFromRequest(request);
+		if (!StringUtils.isBlank(customerIdOverride)
+				&& customerComponent.findCustomerByCustomerId(customerId).isAdmin()) {
+			return customerIdOverride;
+		}
+		return customerId;
 	}
 }
