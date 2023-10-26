@@ -37,7 +37,8 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 			}
 			DeviceData data = component.handleDeviceBody(request.getBody(), customerId);
 			if (data == null) {
-				return new LambdaResponse(BAD_REQUEST, XML_FAILURE_RESPONSE, TEXT_XML);
+				//Return OK here because the device will stack the bad request and resend unless we acknowledge we received it
+				return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
 			}
 			logger.info("successfully uploaded data: " + data.getName() + " : " + data.getDate());
 			return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
