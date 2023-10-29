@@ -5,6 +5,11 @@ import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.CognitoCommon;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
+import com.bigboxer23.solar_moon.lambda.utils.PropertyUtils;
+import com.stripe.StripeClient;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Customer;
+import com.stripe.param.CustomerCreateParams;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -26,12 +31,29 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 			logger.debug(rawRequest);
 			Optional.ofNullable(moshi.adapter(CognitoCommon.class).fromJson(rawRequest))
 					.ifPresent(request -> {
-						customerComponent.addCustomer(
-								request.getRequest().getUserAttributes().getEmail(),
-								request.getRequest().getUserAttributes().getSub(),
-								request.getRequest().getUserAttributes().getName());
+						String email = request.getRequest().getUserAttributes().getEmail();
+						try {
+							logger.info("Creating stripe customer for " + email);
+							Customer customer = new StripeClient(PropertyUtils.getProperty("stripe.api.key"))
+									.customers()
+									.create(new CustomerCreateParams.Builder()
+											.setEmail(email)
+											.setName(request.getRequest()
+													.getUserAttributes()
+													.getName())
+											.build());
+							logger.info("new stripe customer id: " + customer.getId());
+							customerComponent.addCustomer(
+									email,
+									request.getRequest().getUserAttributes().getSub(),
+									request.getRequest().getUserAttributes().getName(),
+									customer.getId());
+						} catch (StripeException e) {
+							logger.warn("Cannot create stripe user " + email, e);
+						}
 					});
 			writer.write(rawRequest);
+			after();
 		}
 	}
 }
