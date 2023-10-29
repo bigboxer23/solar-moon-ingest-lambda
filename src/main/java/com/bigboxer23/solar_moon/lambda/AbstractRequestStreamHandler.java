@@ -52,7 +52,6 @@ public abstract class AbstractRequestStreamHandler
 	@Transaction
 	public abstract LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException;
 
-	@SneakyThrows
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -76,6 +75,11 @@ public abstract class AbstractRequestStreamHandler
 						}
 					});
 		}
+		after();
+	}
+
+	@SneakyThrows
+	protected void after() {
 		TransactionUtil.clear();
 		Thread.sleep(750);
 	}
