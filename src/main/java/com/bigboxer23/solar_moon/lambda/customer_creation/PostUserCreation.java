@@ -1,11 +1,13 @@
 package com.bigboxer23.solar_moon.lambda.customer_creation;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.bigboxer23.solar_moon.data.Subscription;
 import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.CognitoCommon;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.lambda.utils.PropertyUtils;
+import com.bigboxer23.solar_moon.web.TransactionUtil;
 import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -48,6 +50,8 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 									request.getRequest().getUserAttributes().getSub(),
 									request.getRequest().getUserAttributes().getName(),
 									stripeCustomer.getId());
+							TransactionUtil.updateCustomerId(customer.getCustomerId());
+							logger.warn("adding subscription for " + customer.getCustomerId());
 							subscriptionComponent.updateSubscription(customer.getCustomerId(), 0);
 						} catch (StripeException e) {
 							logger.warn("Cannot create stripe user " + email, e);
