@@ -34,7 +34,7 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 						String email = request.getRequest().getUserAttributes().getEmail();
 						try {
 							logger.info("Creating stripe customer for " + email);
-							Customer customer = new StripeClient(PropertyUtils.getProperty("stripe.api.key"))
+							Customer stripeCustomer = new StripeClient(PropertyUtils.getProperty("stripe.api.key"))
 									.customers()
 									.create(new CustomerCreateParams.Builder()
 											.setEmail(email)
@@ -42,12 +42,13 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 													.getUserAttributes()
 													.getName())
 											.build());
-							logger.info("new stripe customer id: " + customer.getId());
-							customerComponent.addCustomer(
+							logger.info("new stripe customer id: " + stripeCustomer.getId());
+							com.bigboxer23.solar_moon.data.Customer customer = customerComponent.addCustomer(
 									email,
 									request.getRequest().getUserAttributes().getSub(),
 									request.getRequest().getUserAttributes().getName(),
-									customer.getId());
+									stripeCustomer.getId());
+							subscriptionComponent.updateSubscription(customer.getCustomerId(), 0);
 						} catch (StripeException e) {
 							logger.warn("Cannot create stripe user " + email, e);
 						}
