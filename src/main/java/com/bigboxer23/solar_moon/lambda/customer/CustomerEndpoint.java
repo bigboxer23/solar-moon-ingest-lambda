@@ -13,6 +13,7 @@ public class CustomerEndpoint extends MethodPipe {
 	static {
 		functions.put(PathItem.HttpMethod.GET.name(), new CustomerGet());
 		functions.put(PathItem.HttpMethod.POST.name(), new CustomerUpdate());
+		functions.put(PathItem.HttpMethod.DELETE.name(), new CustomerDelete());
 	}
 
 	@Override
