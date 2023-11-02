@@ -8,6 +8,7 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.lambda.ingest.UploadFunction;
+import com.bigboxer23.solar_moon.web.AuthenticationUtils;
 import com.bigboxer23.solar_moon.web.Transaction;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.*;
@@ -63,6 +64,9 @@ public abstract class AbstractRequestStreamHandler
 						TransactionUtil.newTransaction(request);
 						logger.debug("request: " + request);
 						try {
+							if (isRedirectingToPricing(request, writer)) {
+								return;
+							}
 							writer.write(moshi.adapter(LambdaResponse.class).toJson(handleLambdaRequest(request)));
 						} catch (Exception e) {
 							logger.warn("handleRequest:", e);
@@ -76,6 +80,18 @@ public abstract class AbstractRequestStreamHandler
 					});
 		}
 		after();
+	}
+
+	private boolean isRedirectingToPricing(LambdaRequest request, OutputStreamWriter writer) throws IOException {
+		if (subscriptionComponent.getSubscriptionPacks(AuthenticationUtils.getCustomerIdFromRequest(request)) == 0) {
+			logger.warn("No subscription exists for "
+					+ AuthenticationUtils.getCustomerIdFromRequest(request)
+					+ ", redirecting to pricing.");
+			writer.write(moshi.adapter(LambdaResponse.class)
+					.toJson(new LambdaResponse(FORBIDDEN, "No subscription is active", APPLICATION_JSON_VALUE)));
+			return true;
+		}
+		return false;
 	}
 
 	@SneakyThrows
