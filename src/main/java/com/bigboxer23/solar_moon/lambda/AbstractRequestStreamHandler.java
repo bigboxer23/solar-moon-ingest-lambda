@@ -65,6 +65,7 @@ public abstract class AbstractRequestStreamHandler
 						logger.debug("request: " + request);
 						try {
 							if (isRedirectingToPricing(request, writer)) {
+								after();
 								return;
 							}
 							writer.write(moshi.adapter(LambdaResponse.class).toJson(handleLambdaRequest(request)));
@@ -78,12 +79,16 @@ public abstract class AbstractRequestStreamHandler
 							}
 						}
 					});
+		} catch (Exception e) {
+			logger.warn("handleRequest", e);
 		}
 		after();
 	}
 
 	private boolean isRedirectingToPricing(LambdaRequest request, OutputStreamWriter writer) throws IOException {
-		if (subscriptionComponent.getSubscriptionPacks(AuthenticationUtils.getCustomerIdFromRequest(request)) == 0) {
+		if (isPricingRedirectEnabled(request)
+				&& subscriptionComponent.getSubscriptionPacks(AuthenticationUtils.getCustomerIdFromRequest(request))
+						== 0) {
 			logger.warn("No subscription exists for "
 					+ AuthenticationUtils.getCustomerIdFromRequest(request)
 					+ ", redirecting to pricing.");
@@ -92,6 +97,10 @@ public abstract class AbstractRequestStreamHandler
 			return true;
 		}
 		return false;
+	}
+
+	protected boolean isPricingRedirectEnabled(LambdaRequest request) {
+		return true;
 	}
 
 	@SneakyThrows
