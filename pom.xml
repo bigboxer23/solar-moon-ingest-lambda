@@ -18,12 +18,12 @@
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.5.3</version>
+      <version>1.5.5</version>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.5.3</version>
+      <version>1.5.5</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -31,6 +31,11 @@
       <groupId>com.stripe</groupId>
       <artifactId>stripe-java</artifactId>
       <version>24.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.bigboxer23</groupId>
+      <artifactId>solar-moon-payments-common</artifactId>
+      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
@@ -121,7 +126,7 @@
               <commandlineArgs>lambda update-function-code &#45;&#45;function-name upload &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>-->
-          <execution>
+          <!--<execution>
             <id>Updating PostUserCreation lambda</id>
             <goals>
               <goal>exec</goal>
@@ -129,10 +134,10 @@
             <phase>package</phase>
             <configuration>
               <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code --function-name PostUserCreation --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+              <commandlineArgs>lambda update-function-code &#45;&#45;function-name PostUserCreation &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
-          </execution>
-          <!-- <execution>
+          </execution>-->
+          <!--<execution>
             <id>Updating customer lambda</id>
             <goals>
               <goal>exec</goal>
@@ -165,6 +170,17 @@
               <commandlineArgs>lambda update-function-code &#45;&#45;function-name search &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>-->
+          <execution>
+            <id>Updating billing lambda</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>lambda update-function-code --function-name billing --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>

@@ -14,4 +14,8 @@ public abstract class MethodHandler implements MediaTypes, HttpStatus, IComponen
 	public String getCustomerIdFromRequest(LambdaRequest request) {
 		return AuthenticationUtils.getCustomerIdFromRequest(request);
 	}
+
+	public boolean isPricingRedirectEnabled(LambdaRequest request) {
+		return true;
+	}
 }

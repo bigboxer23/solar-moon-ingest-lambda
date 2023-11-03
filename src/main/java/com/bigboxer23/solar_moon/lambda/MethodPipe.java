@@ -16,5 +16,10 @@ public abstract class MethodPipe extends AbstractRequestStreamHandler {
 		return getFunction().get(request.getHttpMethod()).handleLambdaRequest(request);
 	}
 
+	protected boolean isPricingRedirectEnabled(LambdaRequest request) {
+		return !getFunction().containsKey(request.getHttpMethod())
+				|| getFunction().get(request.getHttpMethod()).isPricingRedirectEnabled(request);
+	}
+
 	public abstract Map<String, MethodHandler> getFunction();
 }
