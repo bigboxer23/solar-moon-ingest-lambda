@@ -17,24 +17,10 @@ public class GetSubscriptions extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		try {
-			List<SubscriptionPriceInfo> info =
-					component
-							.getActiveSubscriptions(
-									getCustomerFromRequest(request).getStripeCustomerId())
-							.stream()
-							.map(subscription -> new SubscriptionPriceInfo(
-									subscription.getItems().getData().get(0).getQuantity(),
-									subscription
-											.getItems()
-											.getData()
-											.get(0)
-											.getPlan()
-											.getInterval()))
-							.toList();
 			return new LambdaResponse(
 					OK,
 					moshi.adapter(Types.newParameterizedType(List.class, SubscriptionPriceInfo.class))
-							.toJson(info),
+							.toJson(component.getActiveSubscriptionPriceInfo(getCustomerFromRequest(request).getStripeCustomerId())),
 					APPLICATION_JSON_VALUE);
 		} catch (StripeException e) {
 			logger.warn("GetSubscriptions", e);
