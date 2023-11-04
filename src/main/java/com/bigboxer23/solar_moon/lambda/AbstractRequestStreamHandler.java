@@ -58,7 +58,7 @@ public abstract class AbstractRequestStreamHandler
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 				OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
 			String rawRequest = IOUtils.toString(reader);
-			logger.debug("request:" + rawRequest);
+			logger.debug("request:\n" + rawRequest);
 			Optional.ofNullable(moshi.adapter(LambdaRequest.class).fromJson(rawRequest))
 					.ifPresent(request -> {
 						TransactionUtil.newTransaction(request);
