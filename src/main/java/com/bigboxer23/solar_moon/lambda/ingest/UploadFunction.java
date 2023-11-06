@@ -28,6 +28,7 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 		if (customerId == null) {
 			return new LambdaResponse(UNAUTHORIZED, XML_FAILURE_RESPONSE, TEXT_XML);
 		}
+
 		try {
 			if (!component.isUpdateEvent(request.getBody())) {
 				return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
@@ -44,5 +45,10 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 			logger.warn("handleRequest:", e);
 			return new LambdaResponse(BAD_REQUEST, XML_FAILURE_RESPONSE, TEXT_XML);
 		}
+	}
+
+	@Override
+	protected boolean isPricingRedirectEnabled(LambdaRequest request) {
+		return false;
 	}
 }
