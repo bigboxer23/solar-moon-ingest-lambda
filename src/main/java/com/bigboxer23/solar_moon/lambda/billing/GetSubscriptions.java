@@ -20,7 +20,8 @@ public class GetSubscriptions extends MethodHandler {
 			return new LambdaResponse(
 					OK,
 					moshi.adapter(Types.newParameterizedType(List.class, SubscriptionPriceInfo.class))
-							.toJson(component.getActiveSubscriptionPriceInfo(getCustomerFromRequest(request).getStripeCustomerId())),
+							.toJson(component.getActiveSubscriptionPriceInfo(
+									getCustomerFromRequest(request).getStripeCustomerId())),
 					APPLICATION_JSON_VALUE);
 		} catch (StripeException e) {
 			logger.warn("GetSubscriptions", e);

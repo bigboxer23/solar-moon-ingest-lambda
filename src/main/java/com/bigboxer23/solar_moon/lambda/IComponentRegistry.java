@@ -12,11 +12,12 @@ import org.slf4j.LoggerFactory;
 public interface IComponentRegistry {
 	Moshi moshi = new Moshi.Builder().build();
 	CustomerComponent customerComponent = new CustomerComponent();
-	DeviceComponent deviceComponent = new DeviceComponent();
-
-	OpenSearchComponent OSComponent = new OpenSearchComponent();
 
 	SubscriptionComponent subscriptionComponent = new SubscriptionComponent();
+
+	DeviceComponent deviceComponent = new DeviceComponent(subscriptionComponent);
+
+	OpenSearchComponent OSComponent = new OpenSearchComponent();
 
 	Logger logger = LoggerFactory.getLogger(IComponentRegistry.class);
 }
