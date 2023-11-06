@@ -132,7 +132,7 @@
               <commandlineArgs>lambda update-function-code &#45;&#45;function-name PostUserCreation &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>-->
-          <!--<execution>
+          <!-- <execution>
             <id>Updating customer lambda</id>
             <goals>
               <goal>exec</goal>
@@ -165,7 +165,7 @@
               <commandlineArgs>lambda update-function-code &#45;&#45;function-name search &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>-->
-          <execution>
+          <!--<execution>
             <id>Updating billing lambda</id>
             <goals>
               <goal>exec</goal>
@@ -173,7 +173,18 @@
             <phase>package</phase>
             <configuration>
               <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code --function-name billing --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+              <commandlineArgs>lambda update-function-code &#45;&#45;function-name billing &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+            </configuration>
+          </execution>-->
+          <execution>
+            <id>Updating device lambda</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>lambda update-function-code --function-name Lambdolith --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>
         </executions>
