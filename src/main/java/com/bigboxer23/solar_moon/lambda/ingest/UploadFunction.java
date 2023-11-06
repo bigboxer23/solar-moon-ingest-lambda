@@ -5,7 +5,6 @@ import com.bigboxer23.solar_moon.data.DeviceData;
 import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
-import com.bigboxer23.solar_moon.open_search.OpenSearchComponent;
 import com.bigboxer23.solar_moon.web.AuthenticationUtils;
 import java.io.*;
 import javax.xml.xpath.XPathExpressionException;
@@ -15,13 +14,11 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 	private static final GenerationMeterComponent component = getComponent();
 
 	private static GenerationMeterComponent getComponent() {
-		OpenSearchComponent OSComponent = new OpenSearchComponent();
-		DeviceComponent deviceComponent = new DeviceComponent();
 		OpenWeatherComponent weatherComponent = new OpenWeatherComponent();
 		return new GenerationMeterComponent(
 				OSComponent,
 				new AlarmComponent(weatherComponent),
-				new DeviceComponent(),
+				deviceComponent,
 				new SiteComponent(OSComponent, deviceComponent));
 	}
 
