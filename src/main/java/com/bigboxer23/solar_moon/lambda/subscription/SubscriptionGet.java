@@ -1,16 +1,17 @@
-package com.bigboxer23.solar_moon.lambda.customer;
+package com.bigboxer23.solar_moon.lambda.subscription;
 
-import com.bigboxer23.solar_moon.data.Customer;
 import com.bigboxer23.solar_moon.lambda.MethodHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
-import java.io.*;
+import java.io.IOException;
 
 /** */
-public class CustomerGet extends MethodHandler {
+public class SubscriptionGet extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		return new LambdaResponse(
-				OK, moshi.adapter(Customer.class).toJson(getCustomerFromRequest(request)), APPLICATION_JSON_VALUE);
+				OK,
+				subscriptionComponent.getSubscriptionPacks(getCustomerIdFromRequest(request)) + "",
+				APPLICATION_JSON_VALUE);
 	}
 }

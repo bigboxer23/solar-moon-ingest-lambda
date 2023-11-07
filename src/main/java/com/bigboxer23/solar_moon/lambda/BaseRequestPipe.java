@@ -7,6 +7,7 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.lambda.device.DeviceEndpoint;
 import com.bigboxer23.solar_moon.lambda.ingest.UploadFunction;
 import com.bigboxer23.solar_moon.lambda.search.SearchEndpoint;
+import com.bigboxer23.solar_moon.lambda.subscription.SubscriptionEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class BaseRequestPipe extends AbstractRequestStreamHandler {
 		functions.put("/devices", new DeviceEndpoint());
 		functions.put("/search", new SearchEndpoint());
 		functions.put("/upload", new UploadFunction());
+		functions.put("/subscription", new SubscriptionEndpoint());
 	}
 
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
