@@ -176,8 +176,19 @@
               <commandlineArgs>lambda update-function-code &#45;&#45;function-name billing &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>-->
+          <!--<execution>
+            <id>Updating subscription lambda</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>lambda update-function-code &#45;&#45;function-name subscription &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+            </configuration>
+          </execution>-->
           <execution>
-            <id>Updating device lambda</id>
+            <id>Updating Lambdolith</id>
             <goals>
               <goal>exec</goal>
             </goals>
