@@ -1,5 +1,6 @@
 package com.bigboxer23.solar_moon.lambda;
 
+import com.bigboxer23.solar_moon.lambda.alarm.AlarmEndpoint;
 import com.bigboxer23.solar_moon.lambda.billing.BillingEndpoint;
 import com.bigboxer23.solar_moon.lambda.customer.CustomerEndpoint;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
@@ -23,6 +24,7 @@ public class BaseRequestPipe extends AbstractRequestStreamHandler {
 		functions.put("/search", new SearchEndpoint());
 		functions.put("/upload", new UploadFunction());
 		functions.put("/subscription", new SubscriptionEndpoint());
+		functions.put("/alarms", new AlarmEndpoint());
 	}
 
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {

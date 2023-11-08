@@ -22,7 +22,7 @@ public class DeviceGet extends MethodHandler {
 					APPLICATION_JSON_VALUE);
 		}
 		return getDeviceResponse(
-				deviceComponent.getDevice(deviceIdFromPath(request.getPath()), getCustomerIdFromRequest(request)));
+				deviceComponent.getDevice(idFromPath(request.getPath()), getCustomerIdFromRequest(request)));
 	}
 
 	public static LambdaResponse getDeviceResponse(Device device) {
@@ -32,7 +32,7 @@ public class DeviceGet extends MethodHandler {
 				APPLICATION_JSON_VALUE);
 	}
 
-	public static String deviceIdFromPath(String path) {
+	public static String idFromPath(String path) {
 		return Optional.ofNullable(path)
 				.map(p -> p.split("/"))
 				.map(p -> p[p.length - 1])
