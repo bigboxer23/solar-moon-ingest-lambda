@@ -1,8 +1,6 @@
 package com.bigboxer23.solar_moon.lambda;
 
-import com.bigboxer23.solar_moon.CustomerComponent;
-import com.bigboxer23.solar_moon.DeviceComponent;
-import com.bigboxer23.solar_moon.SubscriptionComponent;
+import com.bigboxer23.solar_moon.*;
 import com.bigboxer23.solar_moon.open_search.OpenSearchComponent;
 import com.squareup.moshi.Moshi;
 import org.slf4j.Logger;
@@ -18,6 +16,8 @@ public interface IComponentRegistry {
 	DeviceComponent deviceComponent = new DeviceComponent(subscriptionComponent);
 
 	OpenSearchComponent OSComponent = new OpenSearchComponent();
+
+	AlarmComponent alarmComponent = new AlarmComponent(new OpenWeatherComponent());
 
 	Logger logger = LoggerFactory.getLogger(IComponentRegistry.class);
 }

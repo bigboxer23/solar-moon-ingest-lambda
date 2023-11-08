@@ -28,6 +28,8 @@ public class CustomerDelete extends MethodHandler {
 		removeCognitoUser(customer);
 		subscriptionComponent.deleteSubscription(customer.getCustomerId());
 		customerComponent.deleteCustomerByCustomerId(customer.getCustomerId());
+		deviceComponent.deleteDevicesByCustomerId(customer.getCustomerId());
+		alarmComponent.deleteAlarmsByCustomerId(customer.getCustomerId());
 		return new LambdaResponse(OK, "Deleted user", APPLICATION_JSON_VALUE);
 	}
 
