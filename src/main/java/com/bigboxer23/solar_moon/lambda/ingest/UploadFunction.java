@@ -17,7 +17,7 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 		OpenWeatherComponent weatherComponent = new OpenWeatherComponent();
 		return new GenerationMeterComponent(
 				OSComponent,
-				new AlarmComponent(weatherComponent),
+				new AlarmComponent(weatherComponent, deviceComponent),
 				deviceComponent,
 				new SiteComponent(OSComponent, deviceComponent));
 	}

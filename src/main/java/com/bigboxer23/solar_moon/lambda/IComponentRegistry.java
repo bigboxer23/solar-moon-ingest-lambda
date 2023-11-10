@@ -17,7 +17,7 @@ public interface IComponentRegistry {
 
 	OpenSearchComponent OSComponent = new OpenSearchComponent();
 
-	AlarmComponent alarmComponent = new AlarmComponent(new OpenWeatherComponent());
+	AlarmComponent alarmComponent = new AlarmComponent(new OpenWeatherComponent(), deviceComponent);
 
 	Logger logger = LoggerFactory.getLogger(IComponentRegistry.class);
 }
