@@ -26,7 +26,7 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 	}
 
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-		logger.warn("handle request");
+		logger.info("Scheduling device check");
 		try (SqsClient sqs = SqsClient.create()) {
 			List<SendMessageBatchRequestEntry> entries = new ArrayList<>();
 			deviceComponent.getDevices(false).stream()
@@ -44,7 +44,7 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 			if (!entries.isEmpty()) {
 				sendMessages(entries, sqs);
 			}
-			logger.warn("sent to queue");
+			logger.info("Device check scheduled");
 		} catch (Exception e) {
 			logger.warn("handleRequest:", e);
 		}
