@@ -4,7 +4,7 @@
 		<url>${OS_CLUSTER}</url>
 		<index>logs-%date{yyyy.MM}</index>
 		<includeMdc>true</includeMdc>
-		<sleepTime>100</sleepTime>
+		<sleepTime>0</sleepTime>
 		<authentication class="com.bigboxer23.solar_moon.logging.BasicAuthentication" /> <!-- optional -->
 		<headers>
 			<header>
