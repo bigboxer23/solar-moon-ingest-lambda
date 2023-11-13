@@ -47,10 +47,11 @@ public class DeviceCheck extends AbstractLambdaHandler implements RequestHandler
 		DeviceData data =
 				OSComponent.getLastDeviceEntry(device.getName(), OpenSearchQueries.getDeviceIdQuery(device.getId()));
 		if (data == null) {
-			logger.info("likely new device with no data " + device.getId());
+			logger.debug("likely new device with no data " + device.getId());
 			return;
 		}
-		if (data.getDate().getTime() < new Date(System.currentTimeMillis() - THIRTY_MINUTES).getTime()) {
+		if (!device.isDisabled()
+				&& data.getDate().getTime() < new Date(System.currentTimeMillis() - THIRTY_MINUTES).getTime()) {
 			alarmComponent.alarmConditionDetected(
 					data.getCustomerId(),
 					data,
