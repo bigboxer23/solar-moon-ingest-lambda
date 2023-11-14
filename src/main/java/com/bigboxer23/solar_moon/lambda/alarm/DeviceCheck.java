@@ -4,21 +4,14 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
-import com.bigboxer23.solar_moon.MeterConstants;
 import com.bigboxer23.solar_moon.data.Device;
-import com.bigboxer23.solar_moon.data.DeviceData;
 import com.bigboxer23.solar_moon.lambda.AbstractLambdaHandler;
-import com.bigboxer23.solar_moon.open_search.OpenSearchQueries;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /** */
 public class DeviceCheck extends AbstractLambdaHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
-	public static final long THIRTY_MINUTES = 60 * 30 * 1000;
-
 	@Override
 	public SQSBatchResponse handleRequest(SQSEvent sqsEvent, Context context) {
 		logger.warn(
@@ -40,23 +33,9 @@ public class DeviceCheck extends AbstractLambdaHandler implements RequestHandler
 
 	private void handleMessageBody(String body) throws IOException {
 		Device device = moshi.adapter(Device.class).fromJson(body);
+		alarmComponent.checkDevice(device);
 		if (device == null) {
 			logger.warn("error getting device:\n" + body);
-			return;
-		}
-		DeviceData data =
-				OSComponent.getLastDeviceEntry(device.getName(), OpenSearchQueries.getDeviceIdQuery(device.getId()));
-		if (data == null) {
-			logger.debug("likely new device with no data " + device.getId());
-			return;
-		}
-		if (!device.isDisabled()
-				&& data.getDate().getTime() < new Date(System.currentTimeMillis() - THIRTY_MINUTES).getTime()) {
-			alarmComponent.alarmConditionDetected(
-					data.getCustomerId(),
-					data,
-					"No data recently from device.  Last data: "
-							+ new SimpleDateFormat(MeterConstants.DATE_PATTERN).format(data.getDate()));
 		}
 	}
 }
