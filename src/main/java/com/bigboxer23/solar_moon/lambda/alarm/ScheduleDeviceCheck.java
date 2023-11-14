@@ -52,7 +52,7 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 	}
 
 	private void sendMessages(List<SendMessageBatchRequestEntry> entries, SqsClient sqs) {
-		logger.info("sending batch to sqs " + entries.size());
+		logger.debug("sending batch to sqs " + entries.size());
 		sqs.sendMessageBatch(SendMessageBatchRequest.builder()
 				.queueUrl(queueUrl)
 				.entries(entries)

@@ -3,6 +3,7 @@ package com.bigboxer23.solar_moon.lambda;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
+import com.bigboxer23.solar_moon.IComponentRegistry;
 import com.bigboxer23.solar_moon.lambda.ingest.UploadFunction;
 import com.bigboxer23.solar_moon.logging.OpenSearchAppender;
 import com.bigboxer23.solar_moon.web.TransactionUtil;

@@ -11,16 +11,6 @@ import javax.xml.xpath.XPathExpressionException;
 
 /** */
 public class UploadFunction extends AbstractRequestStreamHandler implements MeterConstants {
-	private static final GenerationMeterComponent component = getComponent();
-
-	private static GenerationMeterComponent getComponent() {
-		OpenWeatherComponent weatherComponent = new OpenWeatherComponent();
-		return new GenerationMeterComponent(
-				OSComponent,
-				new AlarmComponent(weatherComponent, deviceComponent),
-				deviceComponent,
-				new SiteComponent(OSComponent, deviceComponent));
-	}
 
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
@@ -30,10 +20,10 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 		}
 
 		try {
-			if (!component.isUpdateEvent(request.getBody())) {
+			if (!generationComponent.isUpdateEvent(request.getBody())) {
 				return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
 			}
-			DeviceData data = component.handleDeviceBody(request.getBody(), customerId);
+			DeviceData data = generationComponent.handleDeviceBody(request.getBody(), customerId);
 			if (data == null) {
 				// Return OK here because the device will stack the bad request and resend unless we
 				// acknowledge we received it
