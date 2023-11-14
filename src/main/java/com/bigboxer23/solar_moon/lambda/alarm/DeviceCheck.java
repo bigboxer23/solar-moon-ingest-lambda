@@ -9,7 +9,6 @@ import com.bigboxer23.solar_moon.lambda.AbstractLambdaHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /** */
 public class DeviceCheck extends AbstractLambdaHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
@@ -33,9 +32,10 @@ public class DeviceCheck extends AbstractLambdaHandler implements RequestHandler
 	}
 
 	private void handleMessageBody(String body) throws IOException {
-		alarmComponent.checkDevice(moshi.adapter(Device.class).fromJson(body)).or(() -> {
+		Device device = moshi.adapter(Device.class).fromJson(body);
+		alarmComponent.checkDevice(device);
+		if (device == null) {
 			logger.warn("error getting device:\n" + body);
-			return Optional.empty();
-		});
+		}
 	}
 }
