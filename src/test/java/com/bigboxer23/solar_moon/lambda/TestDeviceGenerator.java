@@ -45,6 +45,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 				.toList();
 		for (int ai = 0; ai < mock.size(); ai++) {
 			Device device = mock.get(ai);
+			TransactionUtil.addDeviceId(device.getId());
 			Device srcDevice = src.get(ai % mock.size());
 			logger.info("adding " + device.getName() + " with " + srcDevice.getName());
 
