@@ -13,8 +13,9 @@ import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
-import javax.xml.xpath.XPathExpressionException;
+import java.util.Optional;
 import software.amazon.awssdk.utils.StringUtils;
 
 /** */
@@ -35,22 +36,27 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 			after();
 			return;
 		}
+		List<Device> src = deviceComponent.getDevices(srcCustomerId).stream()
+				.filter(d -> !d.isVirtual())
+				.toList();
+		Arrays.stream(customerId.split(",")).filter(c -> !c.isBlank()).forEach(c -> {
+			mockCustomer(c, src);
+		});
+		after();
+	}
+
+	private void mockCustomer(String customerId, List<Device> srcDevices) {
 		logger.info("Mocking device content for " + customerId);
 		TransactionUtil.updateCustomerId(customerId);
 		List<Device> mock = deviceComponent.getDevices(customerId).stream()
 				.filter(d -> !d.isVirtual())
 				.toList();
-		List<Device> src = deviceComponent.getDevices(srcCustomerId).stream()
-				.filter(d -> !d.isVirtual())
-				.toList();
 		for (int ai = 0; ai < mock.size(); ai++) {
 			Device device = mock.get(ai);
 			TransactionUtil.addDeviceId(device.getId());
-			Device srcDevice = src.get(ai % mock.size());
-			logger.info("adding " + device.getName() + " with " + srcDevice.getName());
-
+			Device srcDevice = findSourceDevice(ai, srcDevices, device);
+			logger.info("adding " + getDeviceName(device) + " with " + getDeviceName(srcDevice));
 			try {
-				logger.info("Fetching device data " + device.getName());
 				DeviceData srcDeviceData = OSComponent.getLastDeviceEntry(
 						srcDevice.getName(), OpenSearchQueries.getDeviceIdQuery(srcDevice.getId()));
 				if (srcDeviceData != null) {
@@ -65,10 +71,20 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 									srcDeviceData.getTotalRealPower()),
 							customerId);
 				}
-			} catch (XPathExpressionException e) {
-				logger.warn("error getting device xml ", e);
+			} catch (Exception e) {
+				logger.warn("error processing device " + getDeviceName(device), e);
 			}
 		}
-		after();
+	}
+
+	private Device findSourceDevice(int index, List<Device> srcDevices, Device mockDevice) {
+		return srcDevices.stream()
+				.filter(d -> getDeviceName(d).equals(getDeviceName(mockDevice)))
+				.findAny()
+				.orElseGet(() -> srcDevices.get(index % srcDevices.size()));
+	}
+
+	private String getDeviceName(Device device) {
+		return Optional.ofNullable(device.getName()).orElse(device.getDeviceName());
 	}
 }
