@@ -127,7 +127,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.1.0</version>
         <executions>
-          <execution>
+           <execution>
             <id>Uploading jar to s3</id>
             <goals>
               <goal>exec</goal>
@@ -138,7 +138,7 @@
               <commandlineArgs>s3 cp ${project.basedir}/target/solar-moon-ingest-lambda-0.1.jar s3://solarmoonanalytics/lambda/</commandlineArgs>
             </configuration>
           </execution>
-         <!-- <execution>
+          <execution>
             <id>Uploading testing jar to s3</id>
             <goals>
               <goal>exec</goal>
@@ -147,138 +147,6 @@
             <configuration>
               <executable>aws</executable>
               <commandlineArgs>s3 cp ${project.basedir}/target/solar-moon-ingest-lambda-0.1-tests.jar s3://solarmoonanalytics/lambda/</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!--<execution>
-            <id>Updating upload lambda</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name upload &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!--<execution>
-            <id>Updating PostUserCreation lambda</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name PostUserCreation &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!-- <execution>
-            <id>Updating customer lambda</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name customer &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!--<execution>
-            <id>Updating device lambda</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name device &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!--<execution>
-            <id>Updating search lambda</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name search &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!--<execution>
-            <id>Updating billing lambda</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name billing &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!--<execution>
-            <id>Updating subscription lambda</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name subscription &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!--<execution>
-            <id>Updating alarm lambda</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name alarm &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!--<execution>
-            <id>Updating scheduleDeviceCheck</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name scheduleDeviceCheck &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!-- <execution>
-            <id>Updating deviceCheck</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name deviceCheck &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <!--<execution>
-            <id>Updating mockDevice</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code &#45;&#45;function-name mockDevice &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1-tests.jar</commandlineArgs>
-            </configuration>
-          </execution>-->
-          <execution>
-            <id>Updating Lambdolith</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <executable>aws</executable>
-              <commandlineArgs>lambda update-function-code --function-name Lambdolith --region us-west-2 --s3-bucket solarmoonanalytics --s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>
         </executions>
