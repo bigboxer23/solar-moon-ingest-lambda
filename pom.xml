@@ -18,12 +18,12 @@
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.5.13</version>
+      <version>1.5.16</version>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.5.13</version>
+      <version>1.5.16</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -81,10 +81,6 @@
           <version>3.1.2</version>
         </plugin>
         <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.3.0</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>3.1.1</version>
         </plugin>
@@ -105,6 +101,28 @@
     </pluginManagement>
     <plugins>
       <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.1.0</version>
@@ -120,6 +138,17 @@
               <commandlineArgs>s3 cp ${project.basedir}/target/solar-moon-ingest-lambda-0.1.jar s3://solarmoonanalytics/lambda/</commandlineArgs>
             </configuration>
           </execution>
+         <!-- <execution>
+            <id>Uploading testing jar to s3</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>s3 cp ${project.basedir}/target/solar-moon-ingest-lambda-0.1-tests.jar s3://solarmoonanalytics/lambda/</commandlineArgs>
+            </configuration>
+          </execution>-->
           <!--<execution>
             <id>Updating upload lambda</id>
             <goals>
@@ -219,7 +248,7 @@
               <commandlineArgs>lambda update-function-code &#45;&#45;function-name scheduleDeviceCheck &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
             </configuration>
           </execution>-->
-         <!-- <execution>
+          <!-- <execution>
             <id>Updating deviceCheck</id>
             <goals>
               <goal>exec</goal>
@@ -228,6 +257,17 @@
             <configuration>
               <executable>aws</executable>
               <commandlineArgs>lambda update-function-code &#45;&#45;function-name deviceCheck &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1.jar</commandlineArgs>
+            </configuration>
+          </execution>-->
+          <!--<execution>
+            <id>Updating mockDevice</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <executable>aws</executable>
+              <commandlineArgs>lambda update-function-code &#45;&#45;function-name mockDevice &#45;&#45;region us-west-2 &#45;&#45;s3-bucket solarmoonanalytics &#45;&#45;s3-key lambda/solar-moon-ingest-lambda-0.1-tests.jar</commandlineArgs>
             </configuration>
           </execution>-->
           <execution>
@@ -246,7 +286,7 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>2.39.0</version>
+        <version>2.40.0</version>
         <configuration>
           <java>
             <googleJavaFormat>
