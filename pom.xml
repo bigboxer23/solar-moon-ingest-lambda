@@ -18,12 +18,12 @@
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.5.16</version>
+      <version>1.5.18</version>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.5.16</version>
+      <version>1.5.18</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -127,7 +127,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.1.0</version>
         <executions>
-           <execution>
+          <execution>
             <id>Uploading jar to s3</id>
             <goals>
               <goal>exec</goal>

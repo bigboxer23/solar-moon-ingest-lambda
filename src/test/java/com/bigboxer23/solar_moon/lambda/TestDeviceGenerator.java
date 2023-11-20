@@ -46,8 +46,8 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 	}
 
 	private void mockCustomer(String customerId, List<Device> srcDevices) {
-		logger.info("Mocking device content for " + customerId);
 		TransactionUtil.updateCustomerId(customerId);
+		logger.info("Mocking device content for " + customerId);
 		List<Device> mock = deviceComponent.getDevices(customerId).stream()
 				.filter(d -> !d.isVirtual())
 				.toList();
@@ -79,9 +79,17 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 
 	private Device findSourceDevice(int index, List<Device> srcDevices, Device mockDevice) {
 		return srcDevices.stream()
-				.filter(d -> getDeviceName(d).equals(getDeviceName(mockDevice)))
+				.filter(d -> getDeviceName(d).equals(getDeviceName(mockDevice))
+						|| (!StringUtils.isEmpty(mockDevice.getMock())
+								&& getDeviceName(d).equals(mockDevice.getMock())))
 				.findAny()
-				.orElseGet(() -> srcDevices.get(index % srcDevices.size()));
+				.orElseGet(() -> {
+					Device d = srcDevices.get(index % srcDevices.size());
+					mockDevice.setMock(getDeviceName(d));
+					logger.warn("Setting up " + getDeviceName(mockDevice) + " as mock of " + getDeviceName(d));
+					deviceComponent.updateDevice(mockDevice);
+					return d;
+				});
 	}
 
 	private String getDeviceName(Device device) {
