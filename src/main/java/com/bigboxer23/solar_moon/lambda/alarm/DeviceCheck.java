@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.bigboxer23.solar_moon.data.Device;
 import com.bigboxer23.solar_moon.lambda.AbstractLambdaHandler;
+import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.List;
 public class DeviceCheck extends AbstractLambdaHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
 	@Override
 	public SQSBatchResponse handleRequest(SQSEvent sqsEvent, Context context) {
-		logger.warn(
-				"starting device processing from queue " + sqsEvent.getRecords().size());
+		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
+		logger.info("Processing " + sqsEvent.getRecords().size() + " from queue");
 		List<SQSBatchResponse.BatchItemFailure> batchItemFailures = new ArrayList<>();
 		String messageId = "";
 		for (SQSEvent.SQSMessage message : sqsEvent.getRecords()) {

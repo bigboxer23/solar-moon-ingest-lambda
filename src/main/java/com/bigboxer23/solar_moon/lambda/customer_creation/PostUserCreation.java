@@ -26,6 +26,7 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
+		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
 		logger.info("post user creation start");
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 				OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {

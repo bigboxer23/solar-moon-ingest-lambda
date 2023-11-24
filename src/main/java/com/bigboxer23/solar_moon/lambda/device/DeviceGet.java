@@ -14,7 +14,7 @@ public class DeviceGet extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		if (request.getPath().equals("/devices/") || request.getPath().equals("/devices")) {
-			List<Device> devices = deviceComponent.getDevices(getCustomerIdFromRequest(request));
+			List<Device> devices = deviceComponent.getDevicesForCustomerId(getCustomerIdFromRequest(request));
 			return new LambdaResponse(
 					OK,
 					moshi.adapter(Types.newParameterizedType(List.class, Device.class))

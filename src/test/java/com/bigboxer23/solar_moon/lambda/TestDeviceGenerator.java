@@ -2,7 +2,6 @@ package com.bigboxer23.solar_moon.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.bigboxer23.solar_moon.TestUtils;
-import com.bigboxer23.solar_moon.TimeUtils;
 import com.bigboxer23.solar_moon.data.Device;
 import com.bigboxer23.solar_moon.data.DeviceData;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
@@ -13,7 +12,10 @@ import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import software.amazon.awssdk.utils.StringUtils;
@@ -31,12 +33,13 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 	}
 
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
+		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
 		if (StringUtils.isEmpty(customerId) || StringUtils.isEmpty(srcCustomerId)) {
 			logger.warn("define customer id and source customer id to mock data");
 			after();
 			return;
 		}
-		List<Device> src = deviceComponent.getDevices(srcCustomerId).stream()
+		List<Device> src = deviceComponent.getDevicesForCustomerId(srcCustomerId).stream()
 				.filter(d -> !d.isVirtual())
 				.toList();
 		Arrays.stream(customerId.split(",")).filter(c -> !c.isBlank()).forEach(c -> {
@@ -48,22 +51,37 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 	private void mockCustomer(String customerId, List<Device> srcDevices) {
 		TransactionUtil.updateCustomerId(customerId);
 		logger.info("Mocking device content for " + customerId);
-		List<Device> mock = deviceComponent.getDevices(customerId).stream()
+		List<Device> mock = deviceComponent.getDevicesForCustomerId(customerId).stream()
 				.filter(d -> !d.isVirtual())
 				.toList();
 		for (int ai = 0; ai < mock.size(); ai++) {
 			Device device = mock.get(ai);
 			TransactionUtil.addDeviceId(device.getId());
 			Device srcDevice = findSourceDevice(ai, srcDevices, device);
-			logger.info("adding " + getDeviceName(device) + " with " + getDeviceName(srcDevice));
+			logger.info("adding "
+					+ getDeviceName(device)
+					+ ":"
+					+ device.getSite()
+					+ " from "
+					+ getDeviceName(srcDevice)
+					+ ":"
+					+ srcDevice.getSite());
 			try {
 				DeviceData srcDeviceData = OSComponent.getLastDeviceEntry(
 						srcDevice.getName(), OpenSearchQueries.getDeviceIdQuery(srcDevice.getId()));
+				logger.debug("from "
+						+ Optional.ofNullable(srcDeviceData)
+								.map(DeviceData::getName)
+								.orElse(""));
 				if (srcDeviceData != null) {
+					LocalDateTime ldt =
+							LocalDateTime.ofInstant(srcDeviceData.getDate().toInstant(), ZoneId.systemDefault());
 					generationComponent.handleDeviceBody(
 							TestUtils.getDeviceXML(
 									device.getDeviceName(),
-									TimeUtils.get15mRoundedDate(),
+									Date.from(ldt.plusMinutes(15)
+											.atZone(ZoneId.systemDefault())
+											.toInstant()),
 									srcDeviceData.getAverageCurrent(),
 									srcDeviceData.getAverageVoltage(),
 									srcDeviceData.getPowerFactor(),
