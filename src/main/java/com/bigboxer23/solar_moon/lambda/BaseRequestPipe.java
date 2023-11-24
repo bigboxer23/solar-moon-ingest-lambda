@@ -9,6 +9,7 @@ import com.bigboxer23.solar_moon.lambda.device.DeviceEndpoint;
 import com.bigboxer23.solar_moon.lambda.ingest.UploadFunction;
 import com.bigboxer23.solar_moon.lambda.search.SearchEndpoint;
 import com.bigboxer23.solar_moon.lambda.subscription.SubscriptionEndpoint;
+import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class BaseRequestPipe extends AbstractRequestStreamHandler {
 			logger.warn("Not able to service " + getPath(request));
 			return new LambdaResponse(BAD_REQUEST, null, APPLICATION_JSON_VALUE);
 		}
+		TransactionUtil.updateServiceCalled(handler.getClass().getSimpleName());
 		return handler.handleLambdaRequest(request);
 	}
 

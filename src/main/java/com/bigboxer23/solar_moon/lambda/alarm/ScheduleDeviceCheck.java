@@ -6,6 +6,7 @@ import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.lambda.utils.PropertyUtils;
+import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,6 +27,7 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 	}
 
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
+		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
 		logger.info("Scheduling device check");
 		try (SqsClient sqs = SqsClient.create()) {
 			List<SendMessageBatchRequestEntry> entries = new ArrayList<>();
