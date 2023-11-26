@@ -76,18 +76,29 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 				if (srcDeviceData != null) {
 					LocalDateTime ldt =
 							LocalDateTime.ofInstant(srcDeviceData.getDate().toInstant(), ZoneId.systemDefault());
-					generationComponent.handleDeviceBody(
-							TestUtils.getDeviceXML(
-									device.getDeviceName(),
-									Date.from(ldt.plusMinutes(15)
-											.atZone(ZoneId.systemDefault())
-											.toInstant()),
-									srcDeviceData.getAverageCurrent(),
-									srcDeviceData.getAverageVoltage(),
-									srcDeviceData.getPowerFactor(),
-									srcDeviceData.getTotalEnergyConsumed(),
-									srcDeviceData.getTotalRealPower()),
-							customerId);
+					DeviceData deviceData = OSComponent.getLastDeviceEntry(
+							srcDevice.getName(), OpenSearchQueries.getDeviceIdQuery(device.getId()));
+					if (deviceData != null
+							&& deviceData.getDate().getTime()
+									== Date.from(ldt.plusMinutes(15)
+													.atZone(ZoneId.systemDefault())
+													.toInstant())
+											.getTime()) {
+						logger.warn("Duplicate last data, not rewriting " + device.getDisplayName());
+					} else {
+						generationComponent.handleDeviceBody(
+								TestUtils.getDeviceXML(
+										device.getDeviceName(),
+										Date.from(ldt.plusMinutes(15)
+												.atZone(ZoneId.systemDefault())
+												.toInstant()),
+										srcDeviceData.getAverageCurrent(),
+										srcDeviceData.getAverageVoltage(),
+										srcDeviceData.getPowerFactor(),
+										srcDeviceData.getTotalEnergyConsumed(),
+										srcDeviceData.getTotalRealPower()),
+								customerId);
+					}
 				}
 			} catch (Exception e) {
 				logger.warn("error processing device " + getDeviceName(device), e);
