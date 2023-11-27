@@ -8,4 +8,4 @@ mkdir java/lib
 cp ~/.m2/repository/software/amazon/awssdk/sqs/$version/sqs-$version.jar java/lib
 zip -r sqs-layer.zip java
 aws s3 cp sqs-layer.zip s3://solarmoonanalytics/lambda/
-aws lambda publish-layer-version --layer-name sqs-layer --compatible-architectures arm64 --compatible-runtimes java17 --description $version --region us-west-2 --content S3Bucket=solarmoonanalytics,S3Key=lambda/sqs-layer.zip --output text
+aws lambda publish-layer-version --layer-name sqs-layer --compatible-architectures arm64 --compatible-runtimes java17 java21 --description $version --region us-west-2 --content S3Bucket=solarmoonanalytics,S3Key=lambda/sqs-layer.zip --output text
