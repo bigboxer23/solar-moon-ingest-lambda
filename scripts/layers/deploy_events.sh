@@ -10,4 +10,4 @@ cp ~/.m2/repository/com/amazonaws/aws-lambda-java-events/$version/aws-lambda-jav
 cp ~/.m2/repository/joda-time/joda-time/2.10.8/joda-time-2.10.8.jar java/lib
 zip -r events-layer.zip java
 aws s3 cp events-layer.zip s3://solarmoonanalytics/lambda/
-aws lambda publish-layer-version --layer-name events-layer --compatible-architectures arm64 --compatible-runtimes java17 --description $version --region us-west-2 --content S3Bucket=solarmoonanalytics,S3Key=lambda/events-layer.zip --output text
+aws lambda publish-layer-version --layer-name events-layer --compatible-architectures arm64 --compatible-runtimes java17 java21 --description $version --region us-west-2 --content S3Bucket=solarmoonanalytics,S3Key=lambda/events-layer.zip --output text
