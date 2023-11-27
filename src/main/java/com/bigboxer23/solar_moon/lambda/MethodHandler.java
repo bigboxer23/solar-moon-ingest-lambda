@@ -7,6 +7,7 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.web.AuthenticationUtils;
 import com.bigboxer23.solar_moon.web.Transaction;
 import java.io.IOException;
+import java.util.Optional;
 
 /** */
 public abstract class MethodHandler implements MediaTypes, HttpStatus, IComponentRegistry {
@@ -17,7 +18,7 @@ public abstract class MethodHandler implements MediaTypes, HttpStatus, IComponen
 		return AuthenticationUtils.getCustomerIdFromRequest(request);
 	}
 
-	public Customer getCustomerFromRequest(LambdaRequest request) {
+	public Optional<Customer> getCustomerFromRequest(LambdaRequest request) {
 		return customerComponent.findCustomerByCustomerId(getCustomerIdFromRequest(request));
 	}
 

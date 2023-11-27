@@ -1,5 +1,6 @@
 package com.bigboxer23.solar_moon.lambda.search;
 
+import com.bigboxer23.solar_moon.data.Customer;
 import com.bigboxer23.solar_moon.lambda.MethodHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
@@ -32,7 +33,10 @@ public class SearchPost extends MethodHandler {
 	private String getCustomerId(LambdaRequest request) {
 		String customerId = getCustomerIdFromRequest(request);
 		if (!StringUtils.isBlank(customerIdOverride)
-				&& customerComponent.findCustomerByCustomerId(customerId).isAdmin()) {
+				&& customerComponent
+						.findCustomerByCustomerId(customerId)
+						.map(Customer::isAdmin)
+						.orElse(false)) {
 			return customerIdOverride;
 		}
 		return customerId;

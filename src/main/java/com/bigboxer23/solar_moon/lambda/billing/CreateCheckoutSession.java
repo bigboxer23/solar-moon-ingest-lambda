@@ -20,7 +20,7 @@ public class CreateCheckoutSession extends MethodHandler {
 					OK,
 					moshi.adapter(Map.class)
 							.toJson(checkoutComponent.createCheckoutSession(
-									getCustomerFromRequest(request),
+									getCustomerFromRequest(request).orElse(null),
 									moshi.adapter(CheckoutPrice.class).fromJson(request.getBody()))),
 					APPLICATION_JSON_VALUE);
 		} catch (StripeException e) {
