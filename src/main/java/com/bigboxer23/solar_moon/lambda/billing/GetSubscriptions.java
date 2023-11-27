@@ -2,6 +2,7 @@ package com.bigboxer23.solar_moon.lambda.billing;
 
 import com.bigboxer23.payments.StripeSubscriptionComponent;
 import com.bigboxer23.payments.SubscriptionPriceInfo;
+import com.bigboxer23.solar_moon.data.Customer;
 import com.bigboxer23.solar_moon.lambda.MethodHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
@@ -20,8 +21,9 @@ public class GetSubscriptions extends MethodHandler {
 			return new LambdaResponse(
 					OK,
 					moshi.adapter(Types.newParameterizedType(List.class, SubscriptionPriceInfo.class))
-							.toJson(component.getActiveSubscriptionPriceInfo(
-									getCustomerFromRequest(request).getStripeCustomerId())),
+							.toJson(component.getActiveSubscriptionPriceInfo(getCustomerFromRequest(request)
+									.map(Customer::getStripeCustomerId)
+									.orElse(null))),
 					APPLICATION_JSON_VALUE);
 		} catch (StripeException e) {
 			logger.warn("GetSubscriptions", e);

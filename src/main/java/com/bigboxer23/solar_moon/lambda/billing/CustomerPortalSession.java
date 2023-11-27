@@ -16,8 +16,9 @@ public class CustomerPortalSession extends MethodHandler {
 		try {
 			return new LambdaResponse(
 					OK,
-					component.createCustomerPortalSession(
-							customerComponent.findCustomerByCustomerId(getCustomerIdFromRequest(request))));
+					component.createCustomerPortalSession(customerComponent
+							.findCustomerByCustomerId(getCustomerIdFromRequest(request))
+							.orElse(null)));
 		} catch (StripeException e) {
 			logger.warn("CustomerPortalSession", e);
 			return new LambdaResponse(BAD_REQUEST, "error creating portal session");

@@ -11,6 +11,9 @@ public class CustomerGet extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		return new LambdaResponse(
-				OK, moshi.adapter(Customer.class).toJson(getCustomerFromRequest(request)), APPLICATION_JSON_VALUE);
+				OK,
+				moshi.adapter(Customer.class)
+						.toJson(getCustomerFromRequest(request).orElse(null)),
+				APPLICATION_JSON_VALUE);
 	}
 }

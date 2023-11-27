@@ -17,7 +17,12 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminDelete
 public class CustomerDelete extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
-		Customer customer = customerComponent.findCustomerByCustomerId(getCustomerIdFromRequest(request));
+		Customer customer = customerComponent
+				.findCustomerByCustomerId(getCustomerIdFromRequest(request))
+				.orElse(null);
+		if (customer == null) {
+			return new LambdaResponse(BAD_REQUEST, "Cannot find customer", APPLICATION_JSON_VALUE);
+		}
 		logger.info(customer.getCustomerId() + " requested deletion.");
 		try {
 			removeStripeUser(customer);
