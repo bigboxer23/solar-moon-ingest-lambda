@@ -1,4 +1,4 @@
-package com.bigboxer23.solar_moon.lambda.notifications;
+package com.bigboxer23.solar_moon.lambda.alarm;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /** */
-public class ScheduledNotificationSender extends AbstractRequestStreamHandler {
+public class ScheduledAlarmCleanUp extends AbstractRequestStreamHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		return null;
@@ -19,7 +19,7 @@ public class ScheduledNotificationSender extends AbstractRequestStreamHandler {
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
 		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
-		alarmComponent.sendPendingNotifications();
+		alarmComponent.cleanupOldAlarms();
 		after();
 	}
 }
