@@ -7,7 +7,7 @@ import com.bigboxer23.solar_moon.data.DeviceData;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.lambda.utils.PropertyUtils;
-import com.bigboxer23.solar_moon.open_search.OpenSearchQueries;
+import com.bigboxer23.solar_moon.search.OpenSearchQueries;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.io.InputStream;

@@ -4,7 +4,7 @@ import com.bigboxer23.solar_moon.data.Alarm;
 import com.bigboxer23.solar_moon.lambda.MethodHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
-import com.bigboxer23.solar_moon.open_search.SearchJSON;
+import com.bigboxer23.solar_moon.search.SearchJSON;
 import com.squareup.moshi.Types;
 import java.io.IOException;
 import java.util.List;
