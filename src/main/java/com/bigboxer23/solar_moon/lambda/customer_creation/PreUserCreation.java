@@ -17,7 +17,9 @@ public class PreUserCreation implements RequestStreamHandler {
 				OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
 			String rawRequest = IOUtils.toString(reader);
 			System.out.println(rawRequest);
-			Optional.ofNullable(IComponentRegistry.moshi.adapter(CognitoCommon.class).fromJson(rawRequest))
+			Optional.ofNullable(IComponentRegistry.moshi
+							.adapter(CognitoCommon.class)
+							.fromJson(rawRequest))
 					.ifPresent(request -> {
 						// TODO: do some validation here or auto approval
 						/*component.addCustomer(
