@@ -31,10 +31,7 @@ public class CustomerDelete extends MethodHandler {
 			return new LambdaResponse(BAD_REQUEST, "Unable to delete account", APPLICATION_JSON_VALUE);
 		}
 		removeCognitoUser(customer);
-		subscriptionComponent.deleteSubscription(customer.getCustomerId());
 		customerComponent.deleteCustomerByCustomerId(customer.getCustomerId());
-		deviceComponent.deleteDevicesByCustomerId(customer.getCustomerId());
-		alarmComponent.deleteAlarmsByCustomerId(customer.getCustomerId());
 		return new LambdaResponse(OK, "Deleted user", APPLICATION_JSON_VALUE);
 	}
 

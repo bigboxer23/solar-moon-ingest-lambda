@@ -35,7 +35,7 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 			Optional.ofNullable(moshi.adapter(CognitoCommon.class).fromJson(rawRequest))
 					.ifPresent(request -> {
 						String email = request.getRequest().getUserAttributes().getEmail();
-						if (customerComponent.findCustomerByEmail(email) != null) {
+						if (customerComponent.findCustomerByEmail(email).isPresent()) {
 							logger.warn(email + " found, not creating new user.");
 							return;
 						}
@@ -50,14 +50,20 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 													.getName())
 											.build());
 							logger.info("new stripe customer id: " + stripeCustomer.getId());
-							com.bigboxer23.solar_moon.data.Customer customer = customerComponent.addCustomer(
+							Optional<com.bigboxer23.solar_moon.data.Customer> customer = customerComponent.addCustomer(
 									email,
 									request.getRequest().getUserAttributes().getSub(),
 									request.getRequest().getUserAttributes().getName(),
 									stripeCustomer.getId());
-							TransactionUtil.updateCustomerId(customer.getCustomerId());
-							logger.warn("adding subscription for " + customer.getCustomerId());
-							subscriptionComponent.updateSubscription(customer.getCustomerId(), 0);
+							if (customer.isEmpty()) {
+								logger.warn("Adding customer failed");
+								return;
+							}
+							TransactionUtil.updateCustomerId(customer.get().getCustomerId());
+							logger.warn(
+									"adding subscription for " + customer.get().getCustomerId());
+							subscriptionComponent.updateSubscription(
+									customer.get().getCustomerId(), 0);
 						} catch (StripeException e) {
 							logger.warn("Cannot create stripe user " + email, e);
 						}
