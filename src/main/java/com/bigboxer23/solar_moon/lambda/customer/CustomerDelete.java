@@ -49,6 +49,10 @@ public class CustomerDelete extends MethodHandler {
 	}
 
 	private void removeStripeUser(Customer customer) throws StripeException {
+		if (customer.getStripeCustomerId() == null) {
+			logger.warn(customer.getCustomerId() + " can't be deleted from stripe, no id");
+			return;
+		}
 		new StripeClient(PropertyUtils.getProperty("stripe.api.key"))
 				.customers()
 				.delete(customer.getStripeCustomerId());
