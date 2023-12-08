@@ -6,6 +6,8 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.squareup.moshi.Types;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +38,7 @@ public class DeviceGet extends MethodHandler {
 		return Optional.ofNullable(path)
 				.map(p -> p.split("/"))
 				.map(p -> p[p.length - 1])
+				.map(p -> URLDecoder.decode(p, StandardCharsets.UTF_8))
 				.orElse(null);
 	}
 }
