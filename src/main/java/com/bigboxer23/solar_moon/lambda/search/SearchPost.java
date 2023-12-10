@@ -28,10 +28,13 @@ public class SearchPost extends MethodHandler {
 									.fromJson(body))
 					.map(searchJSONs -> new LambdaResponse(
 							OK,
-							moshi.adapter(Types.newParameterizedType(List.class, String.class))
-									.toJson(searchJSONs.stream()
-											.map(searchJSON -> getSearchResponse(searchJSON, customerId))
-											.toList()),
+							"["
+									+ String.join(
+											",",
+											searchJSONs.stream()
+													.map(searchJSON -> getSearchResponse(searchJSON, customerId))
+													.toList())
+									+ "]",
 							APPLICATION_JSON_VALUE))
 					.orElseGet(this::badRequest);
 		}
@@ -50,7 +53,6 @@ public class SearchPost extends MethodHandler {
 		logger.warn("SearchPost: Bad Request.");
 		return new LambdaResponse(BAD_REQUEST, "Bad Request", APPLICATION_JSON_VALUE);
 	}
-	;
 
 	private String getCustomerId(LambdaRequest request) {
 		String customerId = getCustomerIdFromRequest(request);
