@@ -9,9 +9,6 @@ import com.bigboxer23.solar_moon.search.SearchJSON;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /** */
 public class OverviewPost extends MethodHandler {
@@ -30,24 +27,8 @@ public class OverviewPost extends MethodHandler {
 		search.setVirtual(true);
 		data.setOverall(getData(null, search));
 		fillSiteInfo(data, search);
-		fillAlarmData(data);
-		logger.info("time: " + (System.currentTimeMillis() - time));
+		logger.debug("time: " + (System.currentTimeMillis() - time));
 		return new LambdaResponse(OK, new Gson().toJson(data), APPLICATION_JSON_VALUE);
-	}
-
-	private void fillAlarmData(OverviewData data) {
-		if (data == null || data.getDevices() == null || data.getAlarms() == null) {
-			return;
-		}
-		Map<String, Device> deviceLookup =
-				data.getDevices().stream().collect(Collectors.toMap(Device::getId, Function.identity()));
-		data.getAlarms().forEach(a -> {
-			Device device = deviceLookup.get(a.getDeviceId());
-			if (device != null) {
-				a.setDeviceName(device.getDisplayName());
-				a.setDeviceSite(device.getSite());
-			}
-		});
 	}
 
 	private void fillSiteInfo(OverviewData data, SearchJSON searchJson) {
