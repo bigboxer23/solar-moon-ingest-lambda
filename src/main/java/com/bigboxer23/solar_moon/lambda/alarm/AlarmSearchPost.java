@@ -20,10 +20,10 @@ public class AlarmSearchPost extends MethodHandler {
 					return new LambdaResponse(
 							OK,
 							moshi.adapter(Types.newParameterizedType(List.class, Alarm.class))
-									.toJson(alarmComponent.filterAlarms(
+									.toJson(AlarmGet.fillAlarmData(alarmComponent.filterAlarms(
 											searchJSON.getCustomerId(),
 											searchJSON.getSite(),
-											searchJSON.getDeviceId())),
+											searchJSON.getDeviceId()))),
 							APPLICATION_JSON_VALUE);
 				})
 				.orElseGet(() -> {
