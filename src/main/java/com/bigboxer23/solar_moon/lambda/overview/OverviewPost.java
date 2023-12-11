@@ -6,7 +6,6 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.search.OpenSearchConstants;
 import com.bigboxer23.solar_moon.search.SearchJSON;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -28,7 +27,7 @@ public class OverviewPost extends MethodHandler {
 		data.setOverall(getData(null, search));
 		fillSiteInfo(data, search);
 		logger.debug("time: " + (System.currentTimeMillis() - time));
-		return new LambdaResponse(OK, new Gson().toJson(data), APPLICATION_JSON_VALUE);
+		return new LambdaResponse(OK, gson.toJson(data), APPLICATION_JSON_VALUE);
 	}
 
 	private void fillSiteInfo(OverviewData data, SearchJSON searchJson) {

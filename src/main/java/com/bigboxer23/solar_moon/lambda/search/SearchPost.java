@@ -5,12 +5,12 @@ import com.bigboxer23.solar_moon.lambda.MethodHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.lambda.utils.PropertyUtils;
-import com.bigboxer23.solar_moon.search.OpenSearchUtils;
 import com.bigboxer23.solar_moon.search.SearchJSON;
 import com.squareup.moshi.Types;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import org.opensearch.client.opensearch.core.SearchResponse;
 import software.amazon.awssdk.utils.StringUtils;
 
 /** */
@@ -28,25 +28,21 @@ public class SearchPost extends MethodHandler {
 									.fromJson(body))
 					.map(searchJSONs -> new LambdaResponse(
 							OK,
-							"["
-									+ String.join(
-											",",
-											searchJSONs.stream()
-													.map(searchJSON -> getSearchResponse(searchJSON, customerId))
-													.toList())
-									+ "]",
+							gson.toJson(searchJSONs.stream()
+									.map(searchJSON -> getSearchResponse(searchJSON, customerId))
+									.toList()),
 							APPLICATION_JSON_VALUE))
 					.orElseGet(this::badRequest);
 		}
 		return Optional.ofNullable(moshi.adapter(SearchJSON.class).fromJson(body))
-				.map(searchJSON ->
-						new LambdaResponse(OK, getSearchResponse(searchJSON, customerId), APPLICATION_JSON_VALUE))
+				.map(searchJSON -> new LambdaResponse(
+						OK, gson.toJson(getSearchResponse(searchJSON, customerId)), APPLICATION_JSON_VALUE))
 				.orElseGet(this::badRequest);
 	}
 
-	private String getSearchResponse(SearchJSON json, String customerId) {
+	private SearchResponse getSearchResponse(SearchJSON json, String customerId) {
 		json.setCustomerId(customerId);
-		return OpenSearchUtils.queryToJson(OSComponent.search(json));
+		return OSComponent.search(json);
 	}
 
 	private LambdaResponse badRequest() {
