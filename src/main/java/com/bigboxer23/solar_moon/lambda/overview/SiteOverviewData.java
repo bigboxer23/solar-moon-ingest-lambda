@@ -9,4 +9,8 @@ public class SiteOverviewData {
 	private SearchResponse totalAvg;
 
 	private SearchResponse timeSeries;
+
+	private SearchResponse dailyEnergyConsumedTotal;
+
+	private double dailyEnergyConsumedAverage;
 }

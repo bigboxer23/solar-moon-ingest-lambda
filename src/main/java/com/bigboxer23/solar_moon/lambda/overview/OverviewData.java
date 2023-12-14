@@ -15,5 +15,5 @@ public class OverviewData {
 
 	private SiteOverviewData overall;
 
-	Map<String, SiteOverviewData> sitesOverviewData;
+	private Map<String, SiteOverviewData> sitesOverviewData;
 }

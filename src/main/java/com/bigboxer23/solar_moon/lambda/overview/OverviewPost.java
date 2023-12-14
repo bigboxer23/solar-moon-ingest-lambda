@@ -6,8 +6,12 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.search.OpenSearchConstants;
 import com.bigboxer23.solar_moon.search.SearchJSON;
+import com.bigboxer23.solar_moon.util.TimeConstants;
+import com.bigboxer23.solar_moon.util.TimeUtils;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
+import software.amazon.awssdk.utils.StringUtils;
 
 /** */
 public class OverviewPost extends MethodHandler {
@@ -26,6 +30,7 @@ public class OverviewPost extends MethodHandler {
 		search.setVirtual(true);
 		data.setOverall(getData(null, search));
 		fillSiteInfo(data, search);
+		fillInOverallInfo(data, search);
 		logger.debug("time: " + (System.currentTimeMillis() - time));
 		return new LambdaResponse(OK, gson.toJson(data), APPLICATION_JSON_VALUE);
 	}
@@ -38,6 +43,19 @@ public class OverviewPost extends MethodHandler {
 		data.setSitesOverviewData(new HashMap<>());
 		data.getDevices().stream().filter(Device::isVirtual).forEach(site -> data.getSitesOverviewData()
 				.put(site.getDisplayName(), getData(site.getDisplayName(), searchJson)));
+	}
+
+	private void fillInOverallInfo(OverviewData data, SearchJSON searchJson) {
+		if (searchJson == null || StringUtils.isBlank(searchJson.getTimeZone())) {
+			return;
+		}
+		Date end = TimeUtils.getStartOfDay(searchJson.getTimeZone());
+		searchJson.setDeviceName(null);
+		searchJson.setEndDate(end.getTime());
+		searchJson.setStartDate(end.getTime() - TimeConstants.DAY);
+		searchJson.setType(OpenSearchConstants.AT_SEARCH_TYPE);
+		data.getOverall().setDailyEnergyConsumedTotal(OSComponent.search(searchJson));
+		data.getOverall().setDailyEnergyConsumedAverage(OSComponent.getAverageEnergyConsumedPerDay(searchJson));
 	}
 
 	private SiteOverviewData getData(String site, SearchJSON searchJson) {
