@@ -28,7 +28,6 @@ public class CustomerDelete extends MethodHandler {
 			removeStripeUser(customer);
 		} catch (StripeException e) {
 			logger.warn("customerDelete:", e);
-			return new LambdaResponse(BAD_REQUEST, "Unable to delete account", APPLICATION_JSON_VALUE);
 		}
 		removeCognitoUser(customer);
 		customerComponent.deleteCustomerByCustomerId(customer.getCustomerId());

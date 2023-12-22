@@ -49,10 +49,10 @@ public class OverviewPost extends MethodHandler {
 		if (searchJson == null || StringUtils.isBlank(searchJson.getTimeZone())) {
 			return;
 		}
-		Date end = TimeUtils.getStartOfDay(searchJson.getTimeZone());
+		Date start = TimeUtils.getStartOfDay(searchJson.getTimeZone());
 		searchJson.setDeviceName(null);
-		searchJson.setEndDate(end.getTime());
-		searchJson.setStartDate(end.getTime() - TimeConstants.DAY);
+		searchJson.setEndDate(start.getTime() + TimeConstants.DAY);
+		searchJson.setStartDate(start.getTime());
 		searchJson.setType(OpenSearchConstants.AT_SEARCH_TYPE);
 		data.getOverall().setDailyEnergyConsumedTotal(OSComponent.search(searchJson));
 		data.getOverall().setDailyEnergyConsumedAverage(OSComponent.getAverageEnergyConsumedPerDay(searchJson));
