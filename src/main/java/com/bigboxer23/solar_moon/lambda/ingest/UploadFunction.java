@@ -6,6 +6,8 @@ import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.web.AuthenticationUtils;
+import org.opensearch.client.ResponseException;
+
 import java.io.*;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -31,8 +33,8 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 			}
 			logger.info("successfully uploaded data: " + data.getName() + " : " + data.getDate());
 			return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
-		} catch (XPathExpressionException e) {
-			logger.warn("handleRequest:", e);
+		} catch (XPathExpressionException | ResponseException e) {
+			logger.warn("handleRequest", e);
 			return new LambdaResponse(BAD_REQUEST, XML_FAILURE_RESPONSE, TEXT_XML);
 		}
 	}
