@@ -62,7 +62,9 @@ public class OverviewPost extends MethodHandler {
 		SiteOverviewData data = new SiteOverviewData();
 		searchJson.setDeviceName(site);
 		searchJson.setType(OpenSearchConstants.AT_SEARCH_TYPE);
+		searchJson.setDaylight(true);
 		data.setTotalAvg(OSComponent.search(searchJson));
+		searchJson.setDaylight(false);
 		searchJson.setType(OpenSearchConstants.TS_SEARCH_TYPE);
 		data.setTimeSeries(OSComponent.search(searchJson));
 		return data;
