@@ -53,7 +53,9 @@ public class OverviewPost extends MethodHandler {
 		searchJson.setDeviceName(null);
 		searchJson.setEndDate(start.getTime() + TimeConstants.DAY);
 		searchJson.setStartDate(start.getTime());
-		searchJson.setType(OpenSearchConstants.AT_SEARCH_TYPE);
+		searchJson.setType(OpenSearchConstants.AVG_TOTAL_SEARCH_TYPE);
+		// This is necessary because the period can shift to wk/mo/yr, and always need to get daily
+		// for overview as well.
 		data.getOverall().setDailyEnergyConsumedTotal(OSComponent.search(searchJson));
 		data.getOverall().setDailyEnergyConsumedAverage(OSComponent.getAverageEnergyConsumedPerDay(searchJson));
 	}
@@ -61,11 +63,13 @@ public class OverviewPost extends MethodHandler {
 	private SiteOverviewData getData(String site, SearchJSON searchJson) {
 		SiteOverviewData data = new SiteOverviewData();
 		searchJson.setDeviceName(site);
-		searchJson.setType(OpenSearchConstants.AT_SEARCH_TYPE);
 		searchJson.setDaylight(true);
-		data.setTotalAvg(OSComponent.search(searchJson));
+		searchJson.setType(OpenSearchConstants.AVG_SEARCH_TYPE);
+		data.setAvg(OSComponent.search(searchJson));
 		searchJson.setDaylight(false);
-		searchJson.setType(OpenSearchConstants.TS_SEARCH_TYPE);
+		searchJson.setType(OpenSearchConstants.TOTAL_SEARCH_TYPE);
+		data.setTotal(OSComponent.search(searchJson));
+		searchJson.setType(OpenSearchConstants.TIME_SERIES_SEARCH_TYPE);
 		data.setTimeSeries(OSComponent.search(searchJson));
 		return data;
 	}
