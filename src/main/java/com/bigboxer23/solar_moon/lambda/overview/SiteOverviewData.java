@@ -8,6 +8,10 @@ import org.opensearch.client.opensearch.core.SearchResponse;
 public class SiteOverviewData {
 	private SearchResponse totalAvg;
 
+	private SearchResponse total;
+
+	private SearchResponse avg;
+
 	private SearchResponse timeSeries;
 
 	private SearchResponse dailyEnergyConsumedTotal;
