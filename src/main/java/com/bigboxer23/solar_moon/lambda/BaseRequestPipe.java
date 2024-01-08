@@ -10,6 +10,7 @@ import com.bigboxer23.solar_moon.lambda.ingest.UploadFunction;
 import com.bigboxer23.solar_moon.lambda.mapping.MappingEndpoint;
 import com.bigboxer23.solar_moon.lambda.overview.OverviewEndpoint;
 import com.bigboxer23.solar_moon.lambda.search.SearchEndpoint;
+import com.bigboxer23.solar_moon.lambda.sites.SitesEndpoint;
 import com.bigboxer23.solar_moon.lambda.subscription.SubscriptionEndpoint;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
@@ -30,6 +31,7 @@ public class BaseRequestPipe extends AbstractRequestStreamHandler {
 		functions.put("/alarms", new AlarmEndpoint());
 		functions.put("/mappings", new MappingEndpoint());
 		functions.put("/overview", new OverviewEndpoint());
+		functions.put("/sites", new SitesEndpoint());
 	}
 
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
