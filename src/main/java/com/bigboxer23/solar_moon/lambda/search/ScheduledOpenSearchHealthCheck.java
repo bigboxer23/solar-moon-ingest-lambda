@@ -5,19 +5,14 @@ import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * Every 5m check if OS is responsive. If not, log
- */
-public class ScheduledOpenSearchHealthCheck extends AbstractRequestStreamHandler
-{
+/** Every 5m check if OS is responsive. If not, log */
+public class ScheduledOpenSearchHealthCheck extends AbstractRequestStreamHandler {
 	@Override
-	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException
-	{
+	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		return null;
 	}
 
