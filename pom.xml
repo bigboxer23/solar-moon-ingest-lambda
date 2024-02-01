@@ -17,19 +17,19 @@
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.6.28</version>
+      <version>1.6.31</version>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.6.28</version>
+      <version>1.6.31</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-payments-common</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.13</version>
     </dependency>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
