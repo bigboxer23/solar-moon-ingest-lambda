@@ -22,7 +22,7 @@ public class AlarmSearchPost extends MethodHandler {
 							moshi.adapter(Types.newParameterizedType(List.class, Alarm.class))
 									.toJson(AlarmGet.fillAlarmData(alarmComponent.filterAlarms(
 											searchJSON.getCustomerId(),
-											searchJSON.getSite(),
+											searchJSON.getSiteId(),
 											searchJSON.getDeviceId()))),
 							APPLICATION_JSON_VALUE);
 				})

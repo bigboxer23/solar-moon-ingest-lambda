@@ -61,11 +61,11 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 			logger.info("adding "
 					+ getDeviceName(device)
 					+ ":"
-					+ device.getSite()
+					+ device.getSiteId()
 					+ " from "
 					+ getDeviceName(srcDevice)
 					+ ":"
-					+ srcDevice.getSite());
+					+ srcDevice.getSiteId());
 			try {
 				DeviceData srcDeviceData = OSComponent.getLastDeviceEntry(
 						srcDevice.getName(), OpenSearchQueries.getDeviceIdQuery(srcDevice.getId()));
