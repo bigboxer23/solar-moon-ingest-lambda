@@ -30,7 +30,7 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 				// acknowledge we received it
 				return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
 			}
-			logger.info("successfully uploaded data: " + data.getName() + " : " + data.getDate());
+			logger.info("successfully uploaded data: " + data.getDeviceId() + " : " + data.getDate());
 			return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
 		} catch (XPathExpressionException | ResponseException e) {
 			logger.warn("handleRequest", e);
