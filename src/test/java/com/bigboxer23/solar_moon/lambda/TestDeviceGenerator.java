@@ -42,9 +42,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 		List<Device> src = deviceComponent.getDevicesForCustomerId(srcCustomerId).stream()
 				.filter(d -> !d.isVirtual())
 				.toList();
-		Arrays.stream(customerId.split(",")).filter(c -> !c.isBlank()).forEach(c -> {
-			mockCustomer(c, src);
-		});
+		Arrays.stream(customerId.split(",")).filter(c -> !c.isBlank()).forEach(c -> mockCustomer(c, src));
 		after();
 	}
 
@@ -71,7 +69,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 						srcDevice.getName(), OpenSearchQueries.getDeviceIdQuery(srcDevice.getId()));
 				logger.debug("from "
 						+ Optional.ofNullable(srcDeviceData)
-								.map(DeviceData::getName)
+								.map(DeviceData::getDeviceId)
 								.orElse(""));
 				if (srcDeviceData != null) {
 					LocalDateTime ldt =
