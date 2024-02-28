@@ -4,7 +4,7 @@ import com.bigboxer23.solar_moon.data.Customer;
 import com.bigboxer23.solar_moon.lambda.MethodHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
-import com.bigboxer23.solar_moon.lambda.utils.PropertyUtils;
+import com.bigboxer23.utils.properties.PropertyUtils;
 import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
 import java.io.IOException;
