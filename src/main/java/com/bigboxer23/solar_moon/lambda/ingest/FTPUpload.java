@@ -43,7 +43,7 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 			delete(bucket, key);
 			return null;
 		}
-		String fileName = key.replace(customer.get().getCustomerId() + "/", "");
+		String fileName = key.replace(customer.get().getAccessKey() + "/XML/", "");
 		TransactionUtil.updateCustomerId(customer.get().getCustomerId());
 		if (key.endsWith("/")) {
 			logger.warn("folder creation " + fileName);
