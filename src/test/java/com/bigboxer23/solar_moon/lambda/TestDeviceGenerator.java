@@ -56,11 +56,11 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 			Device device = mock.get(ai);
 			TransactionUtil.addDeviceId(device.getId());
 			if ("NO_MOCK".equalsIgnoreCase(device.getMock())) {
-				logger.info("not mocking ");
+				logger.debug("not mocking ");
 				continue;
 			}
 			Device srcDevice = findSourceDevice(ai, srcDevices, device);
-			logger.info("adding "
+			logger.info("mocking "
 					+ getDeviceName(device)
 					+ ":"
 					+ device.getSiteId()

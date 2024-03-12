@@ -24,7 +24,8 @@ public class DeviceAdd extends MethodHandler {
 					if (deviceComponent.addDevice(device) == null) {
 						return new LambdaResponse(BAD_REQUEST, "Error creating new device", APPLICATION_JSON_VALUE);
 					}
-					return DeviceGet.getDeviceResponse(deviceComponent.getDevice(device.getId(), device.getClientId()));
+					return DeviceGet.getDeviceResponse(
+							deviceComponent.findDeviceById(device.getId(), device.getClientId()));
 				})
 				.orElseGet(() -> new LambdaResponse(BAD_REQUEST, "Error creating new device", APPLICATION_JSON_VALUE));
 	}

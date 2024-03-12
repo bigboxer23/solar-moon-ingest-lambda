@@ -24,13 +24,14 @@ public class DeviceGet extends MethodHandler {
 					APPLICATION_JSON_VALUE);
 		}
 		return getDeviceResponse(
-				deviceComponent.getDevice(idFromPath(request.getPath()), getCustomerIdFromRequest(request)));
+				deviceComponent.findDeviceById(idFromPath(request.getPath()), getCustomerIdFromRequest(request)));
 	}
 
-	public static LambdaResponse getDeviceResponse(Device device) {
+	public static LambdaResponse getDeviceResponse(Optional<Device> device) {
 		return new LambdaResponse(
-				device == null ? NOT_FOUND : OK,
-				device == null ? null : moshi.adapter(Device.class).toJson(device),
+				device.isEmpty() ? NOT_FOUND : OK,
+				device.map(theDevice -> moshi.adapter(Device.class).toJson(theDevice))
+						.orElse(null),
 				APPLICATION_JSON_VALUE);
 	}
 

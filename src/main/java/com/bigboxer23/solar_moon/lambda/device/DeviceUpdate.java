@@ -21,7 +21,8 @@ public class DeviceUpdate extends MethodHandler {
 						return new LambdaResponse(BAD_REQUEST, "Device is not valid.", APPLICATION_JSON_VALUE);
 					}
 					deviceComponent.updateDevice(device);
-					return DeviceGet.getDeviceResponse(deviceComponent.getDevice(device.getId(), device.getClientId()));
+					return DeviceGet.getDeviceResponse(
+							deviceComponent.findDeviceById(device.getId(), device.getClientId()));
 				})
 				.orElseGet(() -> {
 					logger.warn("DeviceUpdate: Could not find device to update.");
