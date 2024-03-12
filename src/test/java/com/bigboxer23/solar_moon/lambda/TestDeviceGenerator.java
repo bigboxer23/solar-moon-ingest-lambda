@@ -55,8 +55,12 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 		for (int ai = 0; ai < mock.size(); ai++) {
 			Device device = mock.get(ai);
 			TransactionUtil.addDeviceId(device.getId());
+			if ("NO_MOCK".equalsIgnoreCase(device.getMock())) {
+				logger.debug("not mocking ");
+				continue;
+			}
 			Device srcDevice = findSourceDevice(ai, srcDevices, device);
-			logger.info("adding "
+			logger.info("mocking "
 					+ getDeviceName(device)
 					+ ":"
 					+ device.getSiteId()
@@ -84,7 +88,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 											.getTime()) {
 						logger.warn("Duplicate last data, not rewriting " + device.getDisplayName());
 					} else {
-						generationComponent.handleDeviceBody(
+						obviousIngestComponent.handleDeviceBody(
 								TestUtils.getDeviceXML(
 										device.getDeviceName(),
 										Date.from(ldt.plusMinutes(15)

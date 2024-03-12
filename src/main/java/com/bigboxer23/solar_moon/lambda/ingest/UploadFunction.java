@@ -21,10 +21,10 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 		}
 
 		try {
-			if (!generationComponent.isUpdateEvent(request.getBody())) {
+			if (!obviousIngestComponent.isUpdateEvent(request.getBody())) {
 				return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
 			}
-			DeviceData data = generationComponent.handleDeviceBody(request.getBody(), customerId);
+			DeviceData data = obviousIngestComponent.handleDeviceBody(request.getBody(), customerId);
 			if (data == null) {
 				// Return OK here because the device will stack the bad request and resend unless we
 				// acknowledge we received it

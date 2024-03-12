@@ -54,7 +54,9 @@ public class AlarmGet extends MethodHandler {
 	private static void fillAlarmData(Map<String, Device> devices, Alarm alarm) {
 		Device device = Optional.ofNullable(devices)
 				.map(d -> d.get(alarm.getDeviceId()))
-				.orElseGet(() -> deviceComponent.getDevice(alarm.getDeviceId(), alarm.getCustomerId()));
+				.orElseGet(() -> deviceComponent
+						.findDeviceById(alarm.getDeviceId(), alarm.getCustomerId())
+						.orElse(null));
 		if (device != null) {
 			alarm.setDeviceName(device.getDisplayName());
 			alarm.setDeviceSite(device.getSite());
