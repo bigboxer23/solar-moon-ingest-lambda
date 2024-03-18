@@ -8,7 +8,6 @@ import com.bigboxer23.solar_moon.IComponentRegistry;
 import com.bigboxer23.solar_moon.data.Customer;
 import com.bigboxer23.solar_moon.lambda.AbstractLambdaHandler;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
-import com.bigboxer23.utils.properties.PropertyUtils;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -16,8 +15,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.xml.xpath.XPathExpressionException;
 import software.amazon.awssdk.core.ResponseBytes;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -25,7 +22,6 @@ import software.amazon.awssdk.utils.StringUtils;
 
 /** */
 public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S3Event, String> {
-	private static S3Client s3;
 
 	@Override
 	public String handleRequest(S3Event event, Context context) {
@@ -103,14 +99,14 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 	}
 
 	private byte[] fetchZipBytes(String bucket, String key) throws IOException {
-		ResponseBytes<GetObjectResponse> objectBytes = getS3Client()
+		ResponseBytes<GetObjectResponse> objectBytes = IComponentRegistry.smaIngestComponent.getS3Client()
 				.getObjectAsBytes(
 						GetObjectRequest.builder().key(key).bucket(bucket).build());
 		return objectBytes.asByteArray();
 	}
 
 	private void delete(String bucket, String key) {
-		getS3Client()
+		IComponentRegistry.smaIngestComponent.getS3Client()
 				.deleteObject(
 						DeleteObjectRequest.builder().bucket(bucket).key(key).build());
 	}
@@ -121,14 +117,5 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 		}
 		String accessKey = s3Key.substring(0, s3Key.indexOf("/"));
 		return IComponentRegistry.customerComponent.findCustomerIdByAccessKey(accessKey);
-	}
-
-	protected S3Client getS3Client() {
-		if (s3 == null) {
-			s3 = S3Client.builder()
-					.region(Region.of(PropertyUtils.getProperty("aws.region")))
-					.build();
-		}
-		return s3;
 	}
 }

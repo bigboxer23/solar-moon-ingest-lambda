@@ -16,7 +16,7 @@ public class TestFTPUpload implements IComponentRegistry, TestConstants {
 
 	@Test
 	public void getContent() {
-		ResponseBytes<GetObjectResponse> objectBytes = ftpUpload
+		ResponseBytes<GetObjectResponse> objectBytes = smaIngestComponent
 				.getS3Client()
 				.getObjectAsBytes(GetObjectRequest.builder()
 						.key("test/204500.zip")
