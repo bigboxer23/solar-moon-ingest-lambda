@@ -2,6 +2,7 @@ package com.bigboxer23.solar_moon.lambda;
 
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
+import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ public abstract class RequestPipe extends MethodHandler {
 			logger.warn("Not able to service " + request.getPath());
 			return new LambdaResponse(BAD_REQUEST, null, APPLICATION_JSON_VALUE);
 		}
+		TransactionUtil.updateServiceCalled(
+				getFunction().get(request.getPath()).getClass().getSimpleName());
 		return getFunction().get(request.getPath()).handleLambdaRequest(request);
 	}
 

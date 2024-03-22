@@ -34,7 +34,7 @@ public class CustomerDelete extends MethodHandler {
 		return new LambdaResponse(OK, "Deleted user", APPLICATION_JSON_VALUE);
 	}
 
-	private void removeCognitoUser(Customer customer) {
+	protected void removeCognitoUser(Customer customer) {
 		try (CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
 				.region(Region.of(PropertyUtils.getProperty("aws.region")))
 				.credentialsProvider(DefaultCredentialsProvider.create())
@@ -47,7 +47,7 @@ public class CustomerDelete extends MethodHandler {
 		logger.info(customer.getCustomerId() + " removed from cognito.");
 	}
 
-	private void removeStripeUser(Customer customer) throws StripeException {
+	protected void removeStripeUser(Customer customer) throws StripeException {
 		if (customer.getStripeCustomerId() == null) {
 			logger.warn(customer.getCustomerId() + " can't be deleted from stripe, no id");
 			return;
