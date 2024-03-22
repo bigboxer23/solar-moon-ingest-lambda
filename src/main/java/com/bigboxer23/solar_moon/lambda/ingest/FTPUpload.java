@@ -99,14 +99,16 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 	}
 
 	private byte[] fetchZipBytes(String bucket, String key) throws IOException {
-		ResponseBytes<GetObjectResponse> objectBytes = IComponentRegistry.smaIngestComponent.getS3Client()
+		ResponseBytes<GetObjectResponse> objectBytes = IComponentRegistry.smaIngestComponent
+				.getS3Client()
 				.getObjectAsBytes(
 						GetObjectRequest.builder().key(key).bucket(bucket).build());
 		return objectBytes.asByteArray();
 	}
 
 	private void delete(String bucket, String key) {
-		IComponentRegistry.smaIngestComponent.getS3Client()
+		IComponentRegistry.smaIngestComponent
+				.getS3Client()
 				.deleteObject(
 						DeleteObjectRequest.builder().bucket(bucket).key(key).build());
 	}
