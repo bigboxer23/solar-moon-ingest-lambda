@@ -16,8 +16,7 @@ public class SitesPost extends MethodHandler {
 		}
 		search.setCustomerId(getCustomerIdFromRequest(request));
 		if (request.getPath().equals("/sites/") || request.getPath().equals("/sites")) {
-			return new LambdaResponse(
-					OK, gson.toJson(sitesOverviewComponent.getSitesOverviewData(search)), APPLICATION_JSON_VALUE);
+			return new LambdaResponse(BAD_REQUEST, "no site id defined", APPLICATION_JSON_VALUE);
 		}
 		return new LambdaResponse(
 				OK,
