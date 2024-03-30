@@ -61,11 +61,11 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 			}
 			Device srcDevice = findSourceDevice(ai, srcDevices, device);
 			logger.info("mocking "
-					+ getDeviceName(device)
+					+ device.getDisplayName()
 					+ ":"
 					+ device.getSiteId()
 					+ " from "
-					+ getDeviceName(srcDevice)
+					+ srcDevice.getDisplayName()
 					+ ":"
 					+ srcDevice.getSiteId());
 			try {
@@ -103,27 +103,23 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 					}
 				}
 			} catch (Exception e) {
-				logger.warn("error processing device " + getDeviceName(device), e);
+				logger.warn("error processing device " + device.getDisplayName(), e);
 			}
 		}
 	}
 
 	private Device findSourceDevice(int index, List<Device> srcDevices, Device mockDevice) {
 		return srcDevices.stream()
-				.filter(d -> getDeviceName(d).equals(getDeviceName(mockDevice))
+				.filter(d -> d.getDisplayName().equals(mockDevice.getDisplayName())
 						|| (!StringUtils.isEmpty(mockDevice.getMock())
-								&& getDeviceName(d).equals(mockDevice.getMock())))
+								&& d.getDisplayName().equals(mockDevice.getMock())))
 				.findAny()
 				.orElseGet(() -> {
 					Device d = srcDevices.get(index % srcDevices.size());
-					mockDevice.setMock(getDeviceName(d));
-					logger.warn("Setting up " + getDeviceName(mockDevice) + " as mock of " + getDeviceName(d));
+					mockDevice.setMock(d.getDisplayName());
+					logger.warn("Setting up " + mockDevice.getDisplayName() + " as mock of " + d.getDisplayName());
 					deviceComponent.updateDevice(mockDevice);
 					return d;
 				});
-	}
-
-	private String getDeviceName(Device device) {
-		return Optional.ofNullable(device.getName()).orElse(device.getDeviceName());
 	}
 }
