@@ -5,7 +5,6 @@ import com.bigboxer23.solar_moon.data.Device;
 import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
-import com.bigboxer23.solar_moon.web.TransactionUtil;
 import com.bigboxer23.utils.properties.PropertyUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,31 +25,31 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 		return null;
 	}
 
+	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
-		logger.info("Scheduling device check");
-		try (SqsClient sqs = SqsClient.create()) {
-			List<SendMessageBatchRequestEntry> entries = new ArrayList<>();
-			deviceComponent.getDevices(false).stream()
-					.map(device -> SendMessageBatchRequestEntry.builder()
-							.id(device.getId())
-							.messageBody(moshi.adapter(Device.class).toJson(device))
-							.build())
-					.forEach(entry -> {
-						entries.add(entry);
-						if (entries.size() == 10) {
-							sendMessages(entries, sqs);
-							entries.clear();
-						}
-					});
-			if (!entries.isEmpty()) {
-				sendMessages(entries, sqs);
+		safeHandleRequest(() -> {
+			logger.info("Scheduling device check");
+			try (SqsClient sqs = SqsClient.create()) {
+				List<SendMessageBatchRequestEntry> entries = new ArrayList<>();
+				deviceComponent.getDevices(false).stream()
+						.map(device -> SendMessageBatchRequestEntry.builder()
+								.id(device.getId())
+								.messageBody(moshi.adapter(Device.class).toJson(device))
+								.build())
+						.forEach(entry -> {
+							entries.add(entry);
+							if (entries.size() == 10) {
+								sendMessages(entries, sqs);
+								entries.clear();
+							}
+						});
+				if (!entries.isEmpty()) {
+					sendMessages(entries, sqs);
+				}
+				logger.info("Device check scheduled");
 			}
-			logger.info("Device check scheduled");
-		} catch (Exception e) {
-			logger.warn("handleRequest:", e);
-		}
-		after();
+			return null;
+		});
 	}
 
 	private void sendMessages(List<SendMessageBatchRequestEntry> entries, SqsClient sqs) {

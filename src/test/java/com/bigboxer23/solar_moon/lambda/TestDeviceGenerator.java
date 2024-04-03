@@ -32,18 +32,19 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 		return null;
 	}
 
+	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
-		if (StringUtils.isEmpty(customerId) || StringUtils.isEmpty(srcCustomerId)) {
-			logger.warn("define customer id and source customer id to mock data");
-			after();
-			return;
-		}
-		List<Device> src = deviceComponent.getDevicesForCustomerId(srcCustomerId).stream()
-				.filter(d -> !d.isVirtual())
-				.toList();
-		Arrays.stream(customerId.split(",")).filter(c -> !c.isBlank()).forEach(c -> mockCustomer(c, src));
-		after();
+		safeHandleRequest(() -> {
+			if (StringUtils.isEmpty(customerId) || StringUtils.isEmpty(srcCustomerId)) {
+				logger.warn("define customer id and source customer id to mock data");
+				return null;
+			}
+			List<Device> src = deviceComponent.getDevicesForCustomerId(srcCustomerId).stream()
+					.filter(d -> !d.isVirtual())
+					.toList();
+			Arrays.stream(customerId.split(",")).filter(c -> !c.isBlank()).forEach(c -> mockCustomer(c, src));
+			return null;
+		});
 	}
 
 	private void mockCustomer(String customerId, List<Device> srcDevices) {
