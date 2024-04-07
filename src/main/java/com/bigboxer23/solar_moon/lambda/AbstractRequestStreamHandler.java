@@ -74,7 +74,7 @@ public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 		try {
 			command.execute();
 		} catch (Exception e) {
-			logger.error("ScheduledQuickDeviceCheck:", e);
+			logger.error("safeHandleRequest:", e);
 		}
 		after();
 	}

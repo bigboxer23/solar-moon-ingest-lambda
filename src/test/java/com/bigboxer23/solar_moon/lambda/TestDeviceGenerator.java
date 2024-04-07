@@ -95,11 +95,11 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 										Date.from(ldt.plusMinutes(15)
 												.atZone(ZoneId.systemDefault())
 												.toInstant()),
-										srcDeviceData.getAverageCurrent(),
-										srcDeviceData.getAverageVoltage(),
-										srcDeviceData.getPowerFactor(),
-										srcDeviceData.getTotalEnergyConsumed(),
-										srcDeviceData.getTotalRealPower()),
+										Math.max(0, srcDeviceData.getAverageCurrent()),
+										Math.max(0, srcDeviceData.getAverageVoltage()),
+										Math.max(0, srcDeviceData.getPowerFactor()),
+										Math.max(0, srcDeviceData.getTotalEnergyConsumed()),
+										Math.max(0, srcDeviceData.getTotalRealPower())),
 								customerId);
 					}
 				}
