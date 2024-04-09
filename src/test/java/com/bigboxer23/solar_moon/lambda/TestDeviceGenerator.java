@@ -7,6 +7,7 @@ import com.bigboxer23.solar_moon.data.DeviceData;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.search.OpenSearchQueries;
+import com.bigboxer23.solar_moon.util.TimeConstants;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
 import com.bigboxer23.utils.properties.PropertyUtils;
 import java.io.IOException;
@@ -98,7 +99,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 										Math.max(0, srcDeviceData.getAverageCurrent()),
 										Math.max(0, srcDeviceData.getAverageVoltage()),
 										Math.max(0, srcDeviceData.getPowerFactor()),
-										Math.max(0, srcDeviceData.getTotalEnergyConsumed()),
+										getTotalEnergyConsumed(srcDeviceData),
 										Math.max(0, srcDeviceData.getTotalRealPower())),
 								customerId);
 					}
@@ -107,6 +108,19 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 				logger.warn("error processing device " + device.getDisplayName(), e);
 			}
 		}
+	}
+
+	/**
+	 * Handle case where most recent previous value has stale data. If stale, fetch a max from OS
+	 *
+	 * @param srcDeviceData
+	 * @return
+	 */
+	protected float getTotalEnergyConsumed(DeviceData srcDeviceData) {
+		return srcDeviceData.getTotalEnergyConsumed() > 0
+				? srcDeviceData.getTotalEnergyConsumed()
+				: OSComponent.getMaxTotalEnergyConsumed(
+						srcDeviceData.getCustomerId(), srcDeviceData.getDeviceId(), TimeConstants.DAY);
 	}
 
 	private Device findSourceDevice(int index, List<Device> srcDevices, Device mockDevice) {
