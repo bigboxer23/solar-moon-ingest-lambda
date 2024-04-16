@@ -6,10 +6,9 @@ import com.bigboxer23.solar_moon.lambda.AbstractRequestStreamHandler;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.web.AuthenticationUtils;
+import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.*;
 import javax.xml.xpath.XPathExpressionException;
-
-import com.bigboxer23.solar_moon.web.TransactionUtil;
 import org.opensearch.client.ResponseException;
 
 /** */
@@ -32,7 +31,7 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 				// acknowledge we received it
 				return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
 			}
-			TransactionUtil.addDeviceId(data.getDeviceId());
+			TransactionUtil.addDeviceId(data.getDeviceId(), data.getSiteId());
 			logger.info("successfully uploaded data: " + data.getDate());
 			return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
 		} catch (XPathExpressionException | ResponseException e) {

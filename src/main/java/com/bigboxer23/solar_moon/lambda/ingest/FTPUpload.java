@@ -63,7 +63,7 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 		} catch (IOException | XPathExpressionException e) {
 			logger.error("handleRequest " + key, e);
 		}
-		TransactionUtil.addDeviceId(null);
+		TransactionUtil.addDeviceId(null, null);
 		logger.info("import completed, deleting " + fileName);
 		delete(bucket, key);
 		after();
