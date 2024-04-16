@@ -60,8 +60,10 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 			}
 			IComponentRegistry.smaIngestComponent.ingestXMLFile(
 					xmlContent, customer.get().getCustomerId());
-		} catch (IOException | XPathExpressionException e) {
+		} catch (Exception e) {
 			logger.error("handleRequest " + key, e);
+			after();
+			return null;
 		}
 		TransactionUtil.addDeviceId(null, null);
 		logger.info("import completed, deleting " + fileName);
