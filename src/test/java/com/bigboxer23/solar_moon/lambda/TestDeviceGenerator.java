@@ -56,7 +56,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 				.toList();
 		for (int ai = 0; ai < mock.size(); ai++) {
 			Device device = mock.get(ai);
-			TransactionUtil.addDeviceId(device.getId());
+			TransactionUtil.addDeviceId(device.getId(), device.getSiteId());
 			if ("NO_MOCK".equalsIgnoreCase(device.getMock())) {
 				logger.debug("not mocking ");
 				continue;
