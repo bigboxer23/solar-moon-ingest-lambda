@@ -32,6 +32,7 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 			try (SqsClient sqs = SqsClient.create()) {
 				List<SendMessageBatchRequestEntry> entries = new ArrayList<>();
 				deviceComponent.getDevices(false).stream()
+						.filter(device -> !device.isDisabled())
 						.map(device -> SendMessageBatchRequestEntry.builder()
 								.id(device.getId())
 								.messageBody(moshi.adapter(Device.class).toJson(device))
@@ -48,6 +49,7 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 				}
 				logger.info("Device check scheduled");
 			}
+			alarmComponent.clearDisabledResolvedAlarms();
 			return null;
 		});
 	}
