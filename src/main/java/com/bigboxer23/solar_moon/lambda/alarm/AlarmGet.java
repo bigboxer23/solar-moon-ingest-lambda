@@ -59,6 +59,7 @@ public class AlarmGet extends MethodHandler {
 						.orElse(null));
 		if (device != null) {
 			alarm.setDeviceName(device.getDisplayName());
+			alarm.setDeviceDisabled(device.isDisabled());
 			alarm.setDeviceSite(device.getSite());
 		}
 	}
