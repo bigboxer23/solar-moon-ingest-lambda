@@ -22,7 +22,9 @@ public class TestFTPUpload implements IComponentRegistry, TestConstants {
 						.key("test/204500.zip")
 						.bucket("solarmoonanalytics")
 						.build());
-		assertNotNull(ftpUpload.getContent(objectBytes.asByteArray()));
+		String content = ftpUpload.getContent(objectBytes.asByteArray());
+		assertNotNull(content);
+		assertFalse(content.isEmpty());
 	}
 
 	@Test

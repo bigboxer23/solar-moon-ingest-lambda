@@ -53,6 +53,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 		logger.info("Mocking device content for " + customerId);
 		List<Device> mock = deviceComponent.getDevicesForCustomerId(customerId).stream()
 				.filter(d -> !d.isVirtual())
+				.filter(d -> !d.isDisabled())
 				.toList();
 		for (int ai = 0; ai < mock.size(); ai++) {
 			Device device = mock.get(ai);

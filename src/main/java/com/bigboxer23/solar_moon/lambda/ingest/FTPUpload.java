@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.apache.commons.io.input.BOMInputStream;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -81,10 +82,12 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 						|| entryName.contains("3000.xml")
 						|| entryName.contains("4500.xml")) {
 
-					try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+					try (ByteArrayOutputStream os = new ByteArrayOutputStream();
+							BOMInputStream stream =
+									BOMInputStream.builder().setInputStream(zis).get()) {
 						int length;
 						byte[] buffer = new byte[1024];
-						while ((length = zis.read(buffer)) > 0) {
+						while ((length = stream.read(buffer)) > 0) {
 							os.write(buffer, 0, length);
 						}
 						return os.toString(StandardCharsets.UTF_8);
