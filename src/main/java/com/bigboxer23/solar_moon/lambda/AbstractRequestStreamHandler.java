@@ -53,9 +53,9 @@ public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 
 	private boolean isRedirectingToPricing(LambdaRequest request, OutputStreamWriter writer) throws IOException {
 		if (isPricingRedirectEnabled(request)
-				&& subscriptionComponent.getSubscriptionPacks(AuthenticationUtils.getCustomerIdFromRequest(request))
-						== 0) {
-			logger.warn("No subscription exists for "
+				&& subscriptionComponent.getSubscriptionDevices(AuthenticationUtils.getCustomerIdFromRequest(request))
+						<= 0) {
+			logger.warn("No subscription or trial exists for "
 					+ AuthenticationUtils.getCustomerIdFromRequest(request)
 					+ ", redirecting to pricing.");
 			writer.write(moshi.adapter(LambdaResponse.class)
