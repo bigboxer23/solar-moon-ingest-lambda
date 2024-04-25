@@ -13,10 +13,14 @@ public class SubscriptionGet extends MethodHandler {
 		return new LambdaResponse(
 				OK,
 				subscriptionComponent
-								.getSubscription(getCustomerIdFromRequest(request))
-								.map(Subscription::getPacks)
-								.orElse(0)
-						+ "",
+						.getSubscription(getCustomerIdFromRequest(request))
+						.map(sub -> moshi.adapter(Subscription.class).toJson(sub))
+						.orElse(null),
 				APPLICATION_JSON_VALUE);
+	}
+
+	@Override
+	public boolean isPricingRedirectEnabled(LambdaRequest request) {
+		return false;
 	}
 }

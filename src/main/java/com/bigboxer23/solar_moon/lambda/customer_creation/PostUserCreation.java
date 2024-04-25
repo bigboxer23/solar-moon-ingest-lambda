@@ -63,7 +63,7 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 							logger.warn(
 									"adding subscription for " + customer.get().getCustomerId());
 							subscriptionComponent.updateSubscription(
-									customer.get().getCustomerId(), -1);
+									customer.get().getCustomerId(), 0);
 						} catch (StripeException e) {
 							logger.warn("Cannot create stripe user " + email, e);
 						}
