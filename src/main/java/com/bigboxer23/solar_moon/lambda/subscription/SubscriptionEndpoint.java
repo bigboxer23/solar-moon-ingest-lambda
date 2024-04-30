@@ -12,6 +12,7 @@ public class SubscriptionEndpoint extends MethodPipe {
 
 	static {
 		functions.put(PathItem.HttpMethod.GET.name(), new SubscriptionGet());
+		functions.put(PathItem.HttpMethod.POST.name(), new SubscriptionPost());
 	}
 
 	@Override

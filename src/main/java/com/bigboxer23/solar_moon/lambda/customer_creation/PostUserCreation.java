@@ -55,6 +55,7 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 									request.getRequest().getUserAttributes().getSub(),
 									request.getRequest().getUserAttributes().getName(),
 									stripeCustomer.getId());
+							logger.info("post user creation");
 							if (customer.isEmpty()) {
 								logger.warn("Adding customer failed");
 								return;
@@ -69,6 +70,8 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 						}
 					});
 			writer.write(rawRequest);
+		} catch (Exception e) {
+			logger.error("post user creation: ", e);
 		}
 		logger.info("post user creation end");
 		after();

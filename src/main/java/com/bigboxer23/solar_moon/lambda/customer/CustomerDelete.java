@@ -57,4 +57,9 @@ public class CustomerDelete extends MethodHandler {
 				.delete(customer.getStripeCustomerId());
 		logger.info(customer.getCustomerId() + " : " + customer.getStripeCustomerId() + " deleted from stripe");
 	}
+
+	@Override
+	public boolean isPricingRedirectEnabled(LambdaRequest request) {
+		return false;
+	}
 }
