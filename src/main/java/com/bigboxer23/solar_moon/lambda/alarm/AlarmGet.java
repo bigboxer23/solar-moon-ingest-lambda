@@ -25,11 +25,11 @@ public class AlarmGet extends MethodHandler {
 							.toJson(fillAlarmData(alarmComponent.getAlarms(getCustomerIdFromRequest(request)))),
 					APPLICATION_JSON_VALUE);
 		}
-		return getAlarmResponse(alarmComponent.findAlarmByAlarmId(
-				DeviceGet.idFromPath(request.getPath()), getCustomerIdFromRequest(request)));
+		return getAlarmResponse(DeviceGet.idFromPath(request.getPath()), getCustomerIdFromRequest(request));
 	}
 
-	public LambdaResponse getAlarmResponse(Optional<Alarm> alarm) {
+	private LambdaResponse getAlarmResponse(String alarmId, String customerId) {
+		Optional<Alarm> alarm = alarmComponent.findAlarmByAlarmId(alarmId, customerId);
 		return new LambdaResponse(
 				alarm.map(a -> OK).orElse(NOT_FOUND),
 				alarm.map(a -> {
