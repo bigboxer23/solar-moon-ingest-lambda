@@ -2,6 +2,7 @@ package com.bigboxer23.solar_moon.lambda.customer;
 
 import com.bigboxer23.solar_moon.data.Customer;
 import com.bigboxer23.solar_moon.lambda.MethodHandler;
+import com.bigboxer23.solar_moon.lambda.customer_creation.PostUserCreation;
 import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.utils.properties.PropertyUtils;
@@ -31,6 +32,7 @@ public class CustomerDelete extends MethodHandler {
 		}
 		removeCognitoUser(customer);
 		customerComponent.deleteCustomerByCustomerId(customer.getCustomerId());
+		PostUserCreation.updateFTPConfiguration();
 		return new LambdaResponse(OK, "Deleted user", APPLICATION_JSON_VALUE);
 	}
 
