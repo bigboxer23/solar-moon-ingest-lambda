@@ -14,8 +14,7 @@ public class CustomerUpdate extends CustomerGet {
 		Optional.ofNullable(moshi.adapter(Customer.class).fromJson(request.getBody()))
 				.ifPresent(customer -> {
 					customer.setCustomerId(getCustomerIdFromRequest(request));
-					boolean newAccessKey = customer.getAccessKey() == null
-							|| customer.getAccessKey().isBlank();
+					boolean newAccessKey = customer.isAccessKeyChangeRequested();
 					customerComponent.updateCustomer(customer);
 					if (newAccessKey) {
 						PostUserCreation.updateFTPConfiguration();
