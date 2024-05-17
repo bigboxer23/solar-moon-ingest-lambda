@@ -15,9 +15,14 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import org.apache.commons.io.IOUtils;
+import software.amazon.awssdk.services.sqs.SqsClient;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
 /** */
 public class PostUserCreation extends AbstractRequestStreamHandler {
+
+	private static final String queueUrl = PropertyUtils.getProperty("ftp.update.sqs.url");
+
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		// NOOP b/c we just want to feed the raw data back
@@ -65,6 +70,7 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 									"adding subscription for " + customer.get().getCustomerId());
 							subscriptionComponent.updateSubscription(
 									customer.get().getCustomerId(), 0);
+							updateFTPConfiguration();
 						} catch (StripeException e) {
 							logger.warn("Cannot create stripe user " + email, e);
 						}
@@ -75,5 +81,17 @@ public class PostUserCreation extends AbstractRequestStreamHandler {
 		}
 		logger.info("post user creation end");
 		after();
+	}
+
+	public static void updateFTPConfiguration() {
+		logger.info("updating FTP configuration");
+		try (SqsClient sqs = SqsClient.create()) {
+			logger.debug("sending request for FTP config update to SQS");
+			sqs.sendMessage(SendMessageRequest.builder()
+					.queueUrl(queueUrl)
+					.messageBody("update ftp config")
+					.build());
+			logger.info("FTP config update scheduled");
+		}
 	}
 }
