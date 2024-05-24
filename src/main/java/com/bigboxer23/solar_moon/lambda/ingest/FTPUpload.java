@@ -37,17 +37,20 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 		if (customer.isEmpty()) {
 			logger.error("bad key, deleting and returning " + key);
 			delete(bucket, key);
+			after();
 			return null;
 		}
 		String fileName = key.replace(customer.get().getAccessKey() + "/XML/", "");
 		TransactionUtil.updateCustomerId(customer.get().getCustomerId());
 		if (key.endsWith("/")) {
 			logger.warn("folder creation " + fileName);
+			after();
 			return null;
 		}
 		if (!key.toLowerCase().endsWith(".zip")) {
 			logger.error("not zip file, deleting and returning " + fileName);
 			delete(bucket, key);
+			after();
 			return null;
 		}
 
@@ -56,6 +59,7 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 			String xmlContent = getContent(fetchZipBytes(bucket, key));
 			if (StringUtils.isEmpty(xmlContent)) {
 				logger.error("unable to get xml content from " + fileName);
+				after();
 				return null;
 			}
 			IComponentRegistry.smaIngestComponent.ingestXMLFile(
