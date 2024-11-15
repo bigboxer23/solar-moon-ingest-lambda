@@ -7,9 +7,12 @@ import com.amazonaws.services.lambda.runtime.events.models.s3.S3EventNotificatio
 import com.bigboxer23.solar_moon.IComponentRegistry;
 import com.bigboxer23.solar_moon.data.Customer;
 import com.bigboxer23.solar_moon.lambda.AbstractLambdaHandler;
+import com.bigboxer23.solar_moon.util.TimeConstants;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -53,7 +56,15 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 			after();
 			return null;
 		}
-
+		Optional<Date> dataDate = smaIngestComponent.getDateFromSMAS3Path(fileName);
+		if (!dataDate.map(date -> date.getTime() > System.currentTimeMillis() - TimeConstants.THIRTY_DAYS)
+				.orElse(true)) {
+			logger.error(fileName + " data is too old (" + dataDate.get() + "), not importing...");
+			// TODO: delete as well
+			// delete(bucket, key);
+			after();
+			return null;
+		}
 		try {
 			logger.info("zip: " + fileName);
 			String xmlContent = getContent(fetchZipBytes(bucket, key));
