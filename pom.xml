@@ -17,12 +17,12 @@
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.9.8</version>
+      <version>1.9.11</version>
     </dependency>
     <dependency>
       <groupId>com.bigboxer23</groupId>
       <artifactId>solar-moon-common</artifactId>
-      <version>1.9.8</version>
+      <version>1.9.11</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -47,6 +47,11 @@
       <version>3.14.0</version>
     </dependency>
     <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>checksums</artifactId>
+      <version>2.29.10</version>
+    </dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.11.3</version>
@@ -59,11 +64,11 @@
       <name>GitHub bigboxer23 Maven Packages</name>
       <url>https://maven.pkg.github.com/bigboxer23/_</url>
     </repository>
-	  <repository>
-		  <id>maven_central</id>
-		  <name>Maven Central</name>
-		  <url>https://repo.maven.apache.org/maven2/</url>
-	  </repository>
+    <repository>
+      <id>maven_central</id>
+      <name>Maven Central</name>
+      <url>https://repo.maven.apache.org/maven2/</url>
+    </repository>
   </repositories>
   <build>
     <pluginManagement>
