@@ -9,12 +9,14 @@ import com.bigboxer23.utils.properties.PropertyUtils;
 import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminDeleteUserRequest;
 
 /** */
+@Slf4j
 public class CustomerDelete extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
@@ -24,11 +26,11 @@ public class CustomerDelete extends MethodHandler {
 		if (customer == null) {
 			return new LambdaResponse(BAD_REQUEST, "Cannot find customer", APPLICATION_JSON_VALUE);
 		}
-		logger.info(customer.getCustomerId() + " requested deletion.");
+		log.info(customer.getCustomerId() + " requested deletion.");
 		try {
 			removeStripeUser(customer);
 		} catch (StripeException e) {
-			logger.warn("customerDelete:", e);
+			log.warn("customerDelete:", e);
 		}
 		removeCognitoUser(customer);
 		customerComponent.deleteCustomerByCustomerId(customer.getCustomerId());
@@ -46,18 +48,18 @@ public class CustomerDelete extends MethodHandler {
 					.username(customer.getCustomerId())
 					.build());
 		}
-		logger.info(customer.getCustomerId() + " removed from cognito.");
+		log.info(customer.getCustomerId() + " removed from cognito.");
 	}
 
 	protected void removeStripeUser(Customer customer) throws StripeException {
 		if (customer.getStripeCustomerId() == null) {
-			logger.warn(customer.getCustomerId() + " can't be deleted from stripe, no id");
+			log.warn(customer.getCustomerId() + " can't be deleted from stripe, no id");
 			return;
 		}
 		new StripeClient(PropertyUtils.getProperty("stripe.api.key"))
 				.customers()
 				.delete(customer.getStripeCustomerId());
-		logger.info(customer.getCustomerId() + " : " + customer.getStripeCustomerId() + " deleted from stripe");
+		log.info(customer.getCustomerId() + " : " + customer.getStripeCustomerId() + " deleted from stripe");
 	}
 
 	@Override

@@ -9,9 +9,11 @@ import com.bigboxer23.solar_moon.web.AuthenticationUtils;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.*;
 import javax.xml.xpath.XPathExpressionException;
+import lombok.extern.slf4j.Slf4j;
 import org.opensearch.client.ResponseException;
 
 /** */
+@Slf4j
 public class UploadFunction extends AbstractRequestStreamHandler implements MeterConstants {
 
 	@Override
@@ -32,10 +34,10 @@ public class UploadFunction extends AbstractRequestStreamHandler implements Mete
 				return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
 			}
 			TransactionUtil.addDeviceId(data.getDeviceId(), data.getSiteId());
-			logger.info("successfully uploaded data: " + data.getDate());
+			log.info("successfully uploaded data: " + data.getDate());
 			return new LambdaResponse(OK, XML_SUCCESS_RESPONSE, TEXT_XML);
 		} catch (XPathExpressionException | ResponseException e) {
-			logger.warn("handleRequest", e);
+			log.warn("handleRequest", e);
 			return new LambdaResponse(BAD_REQUEST, XML_FAILURE_RESPONSE, TEXT_XML);
 		}
 	}

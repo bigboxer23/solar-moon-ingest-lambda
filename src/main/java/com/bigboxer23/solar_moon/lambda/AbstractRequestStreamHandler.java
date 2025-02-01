@@ -11,9 +11,11 @@ import com.bigboxer23.utils.command.Command;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
 /** */
+@Slf4j
 public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 		implements RequestStreamHandler, MediaTypes, HttpStatus {
 	@Transaction
@@ -24,11 +26,11 @@ public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 				OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
 			String rawRequest = IOUtils.toString(reader);
-			logger.debug("request:\n" + rawRequest);
+			log.debug("request:\n" + rawRequest);
 			Optional.ofNullable(moshi.adapter(LambdaRequest.class).fromJson(rawRequest))
 					.ifPresent(request -> {
 						TransactionUtil.newTransaction(request);
-						logger.debug("request: " + request);
+						log.debug("request: " + request);
 						try {
 							if (isRedirectingToPricing(request, writer)) {
 								after();
@@ -36,7 +38,7 @@ public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 							}
 							writer.write(moshi.adapter(LambdaResponse.class).toJson(handleLambdaRequest(request)));
 						} catch (Exception e) {
-							logger.warn("handleRequest:", e);
+							log.warn("handleRequest:", e);
 							try {
 								writer.write(moshi.adapter(LambdaResponse.class)
 										.toJson(new LambdaResponse(BAD_REQUEST, null, APPLICATION_JSON_VALUE)));
@@ -46,7 +48,7 @@ public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 						}
 					});
 		} catch (Exception e) {
-			logger.warn("handleRequest", e);
+			log.warn("handleRequest", e);
 		}
 		after();
 	}
@@ -55,7 +57,7 @@ public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 		if (isPricingRedirectEnabled(request)
 				&& subscriptionComponent.getSubscriptionDevices(AuthenticationUtils.getCustomerIdFromRequest(request))
 						<= 0) {
-			logger.warn("No subscription or trial exists for "
+			log.warn("No subscription or trial exists for "
 					+ AuthenticationUtils.getCustomerIdFromRequest(request)
 					+ ", redirecting to pricing.");
 			writer.write(moshi.adapter(LambdaResponse.class)
@@ -74,7 +76,7 @@ public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 		try {
 			command.execute();
 		} catch (Exception e) {
-			logger.error("safeHandleRequest:", e);
+			log.error("safeHandleRequest:", e);
 		}
 		after();
 	}

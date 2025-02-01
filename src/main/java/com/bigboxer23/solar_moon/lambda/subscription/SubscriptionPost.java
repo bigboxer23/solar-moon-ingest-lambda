@@ -6,14 +6,16 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.subscription.SubscriptionComponent;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
 /** */
+@Slf4j
 public class SubscriptionPost extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		String customerId = getCustomerIdFromRequest(request);
 		if (!subscriptionComponent.isTrialValid(customerId)) {
-			logger.warn("cannot renew trial, invalid");
+			log.warn("cannot renew trial, invalid");
 			return new LambdaResponse(BAD_REQUEST, "cannot renew trial, invalid");
 		}
 		return new LambdaResponse(

@@ -9,8 +9,10 @@ import com.squareup.moshi.Types;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 /** */
+@Slf4j
 public class AlarmSearchPost extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
@@ -27,7 +29,7 @@ public class AlarmSearchPost extends MethodHandler {
 							APPLICATION_JSON_VALUE);
 				})
 				.orElseGet(() -> {
-					logger.warn("AlarmSearchPost: Bad Request.");
+					log.warn("AlarmSearchPost: Bad Request.");
 					return new LambdaResponse(BAD_REQUEST, "Bad Request", APPLICATION_JSON_VALUE);
 				});
 	}

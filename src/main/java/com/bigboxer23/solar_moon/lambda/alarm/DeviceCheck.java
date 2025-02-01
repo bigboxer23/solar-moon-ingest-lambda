@@ -10,13 +10,15 @@ import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /** */
+@Slf4j
 public class DeviceCheck extends AbstractLambdaHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
 	@Override
 	public SQSBatchResponse handleRequest(SQSEvent sqsEvent, Context context) {
 		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
-		logger.info("Processing " + sqsEvent.getRecords().size() + " from queue");
+		log.info("Processing " + sqsEvent.getRecords().size() + " from queue");
 		List<SQSBatchResponse.BatchItemFailure> batchItemFailures = new ArrayList<>();
 		String messageId = "";
 		for (SQSEvent.SQSMessage message : sqsEvent.getRecords()) {
@@ -36,7 +38,7 @@ public class DeviceCheck extends AbstractLambdaHandler implements RequestHandler
 		Device device = moshi.adapter(Device.class).fromJson(body);
 		alarmComponent.checkDevice(device);
 		if (device == null) {
-			logger.warn("error getting device:\n" + body);
+			log.warn("error getting device:\n" + body);
 		}
 	}
 }

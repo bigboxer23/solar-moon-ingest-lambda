@@ -14,8 +14,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.input.BOMInputStream;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
@@ -24,7 +26,10 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.utils.StringUtils;
 
 /** */
+@Slf4j
 public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S3Event, String> {
+
+	private Map<String, Optional<Customer>> customerCache = new ConcurrentHashMap<>();
 
 	@Override
 	public String handleRequest(S3Event event, Context context) {
@@ -33,12 +38,12 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 				event.getRecords().getFirst();
 		String bucket = record.getS3().getBucket().getName();
 		String key = record.getS3().getObject().getUrlDecodedKey();
-		logger.debug("s3 event triggered " + bucket + " " + key);
+		log.debug("s3 event triggered " + bucket + " " + key);
 
 		// Get customer id from access key path, delete file and return if invalid
 		Optional<Customer> customer = getCustomerFromPath(key);
 		if (customer.isEmpty()) {
-			logger.error("bad key, deleting and returning " + key);
+			log.error("bad key, deleting and returning " + key);
 			delete(bucket, key);
 			after();
 			return null;
@@ -46,12 +51,12 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 		String fileName = key.replace(customer.get().getAccessKey() + "/XML/", "");
 		TransactionUtil.updateCustomerId(customer.get().getCustomerId());
 		if (key.endsWith("/")) {
-			logger.warn("folder creation " + fileName);
+			log.warn("folder creation " + fileName);
 			after();
 			return null;
 		}
 		if (!key.toLowerCase().endsWith(".zip")) {
-			logger.error("not zip file, deleting and returning " + fileName);
+			log.error("not zip file, deleting and returning " + fileName);
 			delete(bucket, key);
 			after();
 			return null;
@@ -59,29 +64,29 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 		Optional<Date> dataDate = smaIngestComponent.getDateFromSMAS3Path(fileName);
 		if (!dataDate.map(date -> date.getTime() > System.currentTimeMillis() - TimeConstants.THIRTY_DAYS)
 				.orElse(true)) {
-			logger.error(fileName + " data is too old (" + dataDate.get() + "), not importing...");
+			log.error(fileName + " data is too old (" + dataDate.get() + "), not importing...");
 			// TODO: delete as well
 			// delete(bucket, key);
 			after();
 			return null;
 		}
 		try {
-			logger.info("zip: " + fileName);
+			log.info("zip: " + fileName);
 			String xmlContent = getContent(fetchZipBytes(bucket, key));
 			if (StringUtils.isEmpty(xmlContent)) {
-				logger.error("unable to get xml content from " + fileName);
+				log.error("unable to get xml content from " + fileName);
 				after();
 				return null;
 			}
 			IComponentRegistry.smaIngestComponent.ingestXMLFile(
 					xmlContent, customer.get().getCustomerId());
 		} catch (Exception e) {
-			logger.error("handleRequest " + key, e);
+			log.error("handleRequest " + key, e);
 			after();
 			return null;
 		}
 		TransactionUtil.addDeviceId(null, null);
-		logger.info("import completed, deleting " + fileName);
+		log.info("import completed, deleting " + fileName);
 		delete(bucket, key);
 		after();
 		return null;
@@ -112,7 +117,7 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 				zipEntry = zis.getNextEntry();
 			}
 		} catch (IOException e) {
-			logger.error("getContent", e);
+			log.error("getContent", e);
 		}
 		return null;
 	}
@@ -132,11 +137,12 @@ public class FTPUpload extends AbstractLambdaHandler implements RequestHandler<S
 						DeleteObjectRequest.builder().bucket(bucket).key(key).build());
 	}
 
-	protected Optional<Customer> getCustomerFromPath(String s3Key) {
+	public Optional<Customer> getCustomerFromPath(String s3Key) {
 		if (StringUtils.isEmpty(s3Key) || !s3Key.contains("/")) {
 			return Optional.empty();
 		}
 		String accessKey = s3Key.substring(0, s3Key.indexOf("/"));
-		return IComponentRegistry.customerComponent.findCustomerIdByAccessKey(accessKey);
+		return customerCache.computeIfAbsent(
+				accessKey, IComponentRegistry.customerComponent::findCustomerIdByAccessKey);
 	}
 }

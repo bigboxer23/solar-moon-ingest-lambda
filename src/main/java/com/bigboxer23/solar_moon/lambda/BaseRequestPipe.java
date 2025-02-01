@@ -17,8 +17,10 @@ import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /** */
+@Slf4j
 public class BaseRequestPipe extends AbstractRequestStreamHandler {
 	private static final Map<String, AbstractRequestStreamHandler> functions = new HashMap<>();
 
@@ -39,7 +41,7 @@ public class BaseRequestPipe extends AbstractRequestStreamHandler {
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		AbstractRequestStreamHandler handler = findMatchingPath(getPath(request));
 		if (handler == null) {
-			logger.warn("Not able to service " + getPath(request));
+			log.warn("Not able to service " + getPath(request));
 			return new LambdaResponse(BAD_REQUEST, null, APPLICATION_JSON_VALUE);
 		}
 		TransactionUtil.updateServiceCalled(handler.getClass().getSimpleName());
