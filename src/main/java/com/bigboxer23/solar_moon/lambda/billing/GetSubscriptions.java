@@ -10,9 +10,11 @@ import com.squareup.moshi.Types;
 import com.stripe.exception.StripeException;
 import java.io.IOException;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.utils.StringUtils;
 
 /** */
+@Slf4j
 public class GetSubscriptions extends MethodHandler {
 	private final StripeSubscriptionComponent component = new StripeSubscriptionComponent();
 
@@ -22,7 +24,7 @@ public class GetSubscriptions extends MethodHandler {
 				.map(Customer::getStripeCustomerId)
 				.orElse(null);
 		if (StringUtils.isEmpty(stripeCustomerId)) {
-			logger.warn("GetSubscriptions: no stripe customer Id");
+			log.warn("GetSubscriptions: no stripe customer Id");
 			return new LambdaResponse(BAD_REQUEST, "error retrieving subscriptions");
 		}
 		try {
@@ -32,7 +34,7 @@ public class GetSubscriptions extends MethodHandler {
 							.toJson(component.getActiveSubscriptionPriceInfo(stripeCustomerId)),
 					APPLICATION_JSON_VALUE);
 		} catch (StripeException e) {
-			logger.warn("GetSubscriptions", e);
+			log.warn("GetSubscriptions", e);
 			return new LambdaResponse(BAD_REQUEST, "error retrieving subscriptions");
 		}
 	}

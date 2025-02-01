@@ -7,8 +7,10 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.util.TokenGenerator;
 import java.io.IOException;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 /** */
+@Slf4j
 public class DeviceAdd extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
@@ -17,8 +19,7 @@ public class DeviceAdd extends MethodHandler {
 					device.setClientId(getCustomerIdFromRequest(request));
 					device.setId(TokenGenerator.generateNewToken());
 					if (!deviceComponent.isValidAdd(device)) {
-						logger.warn(
-								"DeviceAdd: " + moshi.adapter(Device.class).toJson(device) + " Device is not valid.");
+						log.warn("DeviceAdd: " + moshi.adapter(Device.class).toJson(device) + " Device is not valid.");
 						return new LambdaResponse(BAD_REQUEST, "Device is not valid.", APPLICATION_JSON_VALUE);
 					}
 					if (deviceComponent.addDevice(device) == null) {

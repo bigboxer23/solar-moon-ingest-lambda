@@ -6,8 +6,10 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.mapping.AttributeMap;
 import java.io.IOException;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 /** */
+@Slf4j
 public class MappingAdd extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
@@ -16,7 +18,7 @@ public class MappingAdd extends MethodHandler {
 					Optional<AttributeMap> mapping = mappingComponent.addMapping(
 							getCustomerIdFromRequest(request), map.getAttribute(), map.getMappingName());
 					if (mapping.isEmpty()) {
-						logger.warn("MappingAdd: cannot add");
+						log.warn("MappingAdd: cannot add");
 						return new LambdaResponse(BAD_REQUEST, "Error creating new mapping", APPLICATION_JSON_VALUE);
 					}
 					return new LambdaResponse(

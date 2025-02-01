@@ -5,13 +5,15 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
 import java.io.IOException;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /** */
+@Slf4j
 public abstract class RequestPipe extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
 		if (!getFunction().containsKey(request.getPath())) {
-			logger.warn("Not able to service " + request.getPath());
+			log.warn("Not able to service " + request.getPath());
 			return new LambdaResponse(BAD_REQUEST, null, APPLICATION_JSON_VALUE);
 		}
 		TransactionUtil.updateServiceCalled(

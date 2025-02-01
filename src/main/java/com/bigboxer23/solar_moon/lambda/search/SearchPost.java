@@ -8,9 +8,11 @@ import com.squareup.moshi.Types;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.opensearch.client.opensearch.core.SearchResponse;
 
 /** */
+@Slf4j
 public class SearchPost extends MethodHandler {
 	@Override
 	public LambdaResponse handleLambdaRequest(LambdaRequest request) throws IOException {
@@ -40,7 +42,7 @@ public class SearchPost extends MethodHandler {
 	}
 
 	private LambdaResponse badRequest() {
-		logger.warn("SearchPost: Bad Request.");
+		log.warn("SearchPost: Bad Request.");
 		return new LambdaResponse(BAD_REQUEST, "Bad Request", APPLICATION_JSON_VALUE);
 	}
 }

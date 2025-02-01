@@ -7,8 +7,10 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.stripe.exception.StripeException;
 import java.io.IOException;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /** */
+@Slf4j
 public class CheckoutSessionStatus extends MethodHandler {
 	private static final StripeCheckoutComponent checkoutComponent = new StripeCheckoutComponent();
 
@@ -22,7 +24,7 @@ public class CheckoutSessionStatus extends MethodHandler {
 									request.getQueryStringParameters().getSession_id())),
 					APPLICATION_JSON_VALUE);
 		} catch (StripeException e) {
-			logger.warn("CheckoutSessionStatus", e);
+			log.warn("CheckoutSessionStatus", e);
 			return new LambdaResponse(BAD_REQUEST, "error getting checkout session");
 		}
 	}

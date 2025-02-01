@@ -19,9 +19,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.utils.StringUtils;
 
 /** */
+@Slf4j
 public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 
 	private static final String customerId = PropertyUtils.getProperty("customer_id");
@@ -37,7 +39,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
 		safeHandleRequest(() -> {
 			if (StringUtils.isEmpty(customerId) || StringUtils.isEmpty(srcCustomerId)) {
-				logger.warn("define customer id and source customer id to mock data");
+				log.warn("define customer id and source customer id to mock data");
 				return null;
 			}
 			List<Device> src = deviceComponent.getDevicesForCustomerId(srcCustomerId).stream()
@@ -50,7 +52,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 
 	private void mockCustomer(String customerId, List<Device> srcDevices) {
 		TransactionUtil.updateCustomerId(customerId);
-		logger.info("Mocking device content for " + customerId);
+		log.info("Mocking device content for " + customerId);
 		List<Device> mock = deviceComponent.getDevicesForCustomerId(customerId).stream()
 				.filter(d -> !d.isVirtual())
 				.filter(d -> !d.isDisabled())
@@ -59,11 +61,11 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 			Device device = mock.get(ai);
 			TransactionUtil.addDeviceId(device.getId(), device.getSiteId());
 			if ("NO_MOCK".equalsIgnoreCase(device.getMock())) {
-				logger.debug("not mocking ");
+				log.debug("not mocking ");
 				continue;
 			}
 			Device srcDevice = findSourceDevice(ai, srcDevices, device);
-			logger.info("mocking "
+			log.info("mocking "
 					+ device.getDisplayName()
 					+ ":"
 					+ device.getSiteId()
@@ -74,7 +76,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 			try {
 				DeviceData srcDeviceData = OSComponent.getLastDeviceEntry(
 						srcDevice.getName(), OpenSearchQueries.getDeviceIdQuery(srcDevice.getId()));
-				logger.debug("from "
+				log.debug("from "
 						+ Optional.ofNullable(srcDeviceData)
 								.map(DeviceData::getDeviceId)
 								.orElse(""));
@@ -89,7 +91,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 													.atZone(ZoneId.systemDefault())
 													.toInstant())
 											.getTime()) {
-						logger.warn("Duplicate last data, not rewriting " + device.getDisplayName());
+						log.warn("Duplicate last data, not rewriting " + device.getDisplayName());
 					} else {
 						obviousIngestComponent.handleDeviceBody(
 								TestUtils.getDeviceXML(
@@ -106,7 +108,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 					}
 				}
 			} catch (Exception e) {
-				logger.warn("error processing device " + device.getDisplayName(), e);
+				log.warn("error processing device " + device.getDisplayName(), e);
 			}
 		}
 	}
@@ -133,7 +135,7 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 				.orElseGet(() -> {
 					Device d = srcDevices.get(index % srcDevices.size());
 					mockDevice.setMock(d.getDisplayName());
-					logger.warn("Setting up " + mockDevice.getDisplayName() + " as mock of " + d.getDisplayName());
+					log.warn("Setting up " + mockDevice.getDisplayName() + " as mock of " + d.getDisplayName());
 					deviceComponent.updateDevice(mockDevice);
 					return d;
 				});

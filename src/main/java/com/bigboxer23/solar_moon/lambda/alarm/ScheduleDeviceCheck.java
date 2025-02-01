@@ -11,11 +11,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.SendMessageBatchRequest;
 import software.amazon.awssdk.services.sqs.model.SendMessageBatchRequestEntry;
 
 /** */
+@Slf4j
 public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 
 	private static final String queueUrl = PropertyUtils.getProperty("device.check.sqs.url");
@@ -28,7 +30,7 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
 		safeHandleRequest(() -> {
-			logger.info("Scheduling device check");
+			log.info("Scheduling device check");
 			try (SqsClient sqs = SqsClient.create()) {
 				List<SendMessageBatchRequestEntry> entries = new ArrayList<>();
 				deviceComponent.getDevices(false).stream()
@@ -47,7 +49,7 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 				if (!entries.isEmpty()) {
 					sendMessages(entries, sqs);
 				}
-				logger.info("Device check scheduled");
+				log.info("Device check scheduled");
 			}
 			alarmComponent.clearDisabledResolvedAlarms();
 			return null;
@@ -55,7 +57,7 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 	}
 
 	private void sendMessages(List<SendMessageBatchRequestEntry> entries, SqsClient sqs) {
-		logger.debug("sending batch to sqs " + entries.size());
+		log.debug("sending batch to sqs " + entries.size());
 		sqs.sendMessageBatch(SendMessageBatchRequest.builder()
 				.queueUrl(queueUrl)
 				.entries(entries)

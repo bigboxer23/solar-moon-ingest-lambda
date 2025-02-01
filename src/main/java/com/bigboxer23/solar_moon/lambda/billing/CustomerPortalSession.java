@@ -6,8 +6,10 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaRequest;
 import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.stripe.exception.StripeException;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
 /** */
+@Slf4j
 public class CustomerPortalSession extends MethodHandler {
 	private static final StripeBillingPortalComponent component = new StripeBillingPortalComponent();
 
@@ -20,7 +22,7 @@ public class CustomerPortalSession extends MethodHandler {
 							.findCustomerByCustomerId(getCustomerIdFromRequest(request))
 							.orElse(null)));
 		} catch (StripeException e) {
-			logger.warn("CustomerPortalSession", e);
+			log.warn("CustomerPortalSession", e);
 			return new LambdaResponse(BAD_REQUEST, "error creating portal session");
 		}
 	}
