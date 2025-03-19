@@ -17,9 +17,6 @@ public class ScheduledOpenSearchHealthCheck extends AbstractRequestStreamHandler
 
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
-		safeHandleRequest(() -> {
-			OpenSearchStatusComponent.checkAvailability();
-			return null;
-		});
+		safeHandleRequest(OpenSearchStatusComponent::checkAvailability);
 	}
 }

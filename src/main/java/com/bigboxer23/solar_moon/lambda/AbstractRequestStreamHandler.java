@@ -7,7 +7,7 @@ import com.bigboxer23.solar_moon.lambda.data.LambdaResponse;
 import com.bigboxer23.solar_moon.web.AuthenticationUtils;
 import com.bigboxer23.solar_moon.web.Transaction;
 import com.bigboxer23.solar_moon.web.TransactionUtil;
-import com.bigboxer23.utils.command.Command;
+import com.bigboxer23.utils.command.VoidCommand;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -71,7 +71,7 @@ public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 		return true;
 	}
 
-	protected void safeHandleRequest(Command<Void> command) {
+	protected void safeHandleRequest(VoidCommand command) {
 		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
 		try {
 			command.execute();

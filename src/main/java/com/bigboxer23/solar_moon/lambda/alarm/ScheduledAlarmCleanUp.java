@@ -17,9 +17,6 @@ public class ScheduledAlarmCleanUp extends AbstractRequestStreamHandler {
 
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
-		safeHandleRequest(() -> {
-			alarmComponent.cleanupOldAlarms();
-			return null;
-		});
+		safeHandleRequest(alarmComponent::cleanupOldAlarms);
 	}
 }

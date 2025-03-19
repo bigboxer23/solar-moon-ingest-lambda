@@ -17,9 +17,6 @@ public class ScheduledLogsCleanup extends AbstractRequestStreamHandler {
 
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
-		safeHandleRequest(() -> {
-			maintenanceComponent.cleanupOldLogs();
-			return null;
-		});
+		safeHandleRequest(maintenanceComponent::cleanupOldLogs);
 	}
 }

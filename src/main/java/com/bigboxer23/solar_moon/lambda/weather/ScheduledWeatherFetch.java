@@ -17,9 +17,6 @@ public class ScheduledWeatherFetch extends AbstractRequestStreamHandler {
 
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
-		safeHandleRequest(() -> {
-			weatherComponent.fetchNewWeather();
-			return null;
-		});
+		safeHandleRequest(weatherComponent::fetchNewWeather);
 	}
 }
