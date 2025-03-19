@@ -17,9 +17,6 @@ public class ScheduledNotificationSender extends AbstractRequestStreamHandler {
 
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
-		safeHandleRequest(() -> {
-			alarmComponent.sendPendingNotifications();
-			return null;
-		});
+		safeHandleRequest(alarmComponent::sendPendingNotifications);
 	}
 }

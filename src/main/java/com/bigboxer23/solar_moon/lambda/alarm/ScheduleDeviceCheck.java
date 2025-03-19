@@ -52,7 +52,6 @@ public class ScheduleDeviceCheck extends AbstractRequestStreamHandler {
 				log.info("Device check scheduled");
 			}
 			alarmComponent.clearDisabledResolvedAlarms();
-			return null;
 		});
 	}
 

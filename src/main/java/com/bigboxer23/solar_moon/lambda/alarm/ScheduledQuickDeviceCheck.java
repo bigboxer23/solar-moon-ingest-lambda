@@ -17,9 +17,6 @@ public class ScheduledQuickDeviceCheck extends AbstractRequestStreamHandler {
 
 	@Override
 	public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
-		safeHandleRequest(() -> {
-			alarmComponent.quickCheckDevices();
-			return null;
-		});
+		safeHandleRequest(alarmComponent::quickCheckDevices);
 	}
 }
