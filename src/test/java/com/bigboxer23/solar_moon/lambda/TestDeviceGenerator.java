@@ -40,13 +40,12 @@ public class TestDeviceGenerator extends AbstractRequestStreamHandler {
 		safeHandleRequest(() -> {
 			if (StringUtils.isEmpty(customerId) || StringUtils.isEmpty(srcCustomerId)) {
 				log.warn("define customer id and source customer id to mock data");
-				return null;
+				return;
 			}
 			List<Device> src = deviceComponent.getDevicesForCustomerId(srcCustomerId).stream()
 					.filter(d -> !d.isVirtual())
 					.toList();
 			Arrays.stream(customerId.split(",")).filter(c -> !c.isBlank()).forEach(c -> mockCustomer(c, src));
-			return null;
 		});
 	}
 
