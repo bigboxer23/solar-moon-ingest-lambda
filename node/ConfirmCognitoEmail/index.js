@@ -18,7 +18,7 @@ export const handler = async (event) => {
 			return {
 				"statusCode": 301,
 				"headers": {
-					"location": "https://solarmoonanalytics.com/verified"
+					"Location": "https://solarmoonanalytics.com/verified"
 				},
 				"body": "",
 				"isBase64Encoded": false
