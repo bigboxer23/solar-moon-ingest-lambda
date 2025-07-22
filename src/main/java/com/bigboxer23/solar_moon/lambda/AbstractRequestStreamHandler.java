@@ -75,7 +75,7 @@ public abstract class AbstractRequestStreamHandler extends AbstractLambdaHandler
 		TransactionUtil.updateServiceCalled(getClass().getSimpleName());
 		try {
 			command.execute();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error("safeHandleRequest:", e);
 		}
 		after();
